@@ -3,6 +3,7 @@ import "./globals.css";
 import ClientLayout from "@/components/ClientLayout";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://fluxid.stellarvhibes.org"),
   title: { template: "%s | FluxID", default: "FluxID — Liquidity Identity Layer on Stellar" },
   description:
     "FluxID turns any wallet into a real-time financial identity. Analyze liquidity, assess risk, and build financial trust on Stellar.",
