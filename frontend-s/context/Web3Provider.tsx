@@ -12,9 +12,9 @@ const queryClient = new QueryClient()
 const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID || 'placeholder-build-id'
 
 const metadata = {
-  name: 'ForgeX: Vult',
-  description: 'Yield-Native Liquidity Hooks on Base',
-  url: 'https://forgex.vercel.app',
+  name: 'FluxID',
+  description: 'Liquidity Identity Layer on Stellar',
+  url: 'https://fluxid.stellarvhibes.org',
   icons: ['/logo.svg'],
 }
 

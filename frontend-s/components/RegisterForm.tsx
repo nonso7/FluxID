@@ -12,7 +12,7 @@ export default function RegisterForm({ onSuccess: onSuccessCallback }: { onSucce
 
   useEffect(() => {
     if (isSuccess) {
-      showToast("Registration successful! Welcome to ForgeX.", "success");
+      showToast("Registration successful! Welcome to FluxID.", "success");
       onSuccessCallback?.();
     }
   }, [isSuccess]);
@@ -63,7 +63,7 @@ export default function RegisterForm({ onSuccess: onSuccessCallback }: { onSucce
           disabled={isPending || isConfirming || !username || !bio}
           className="w-full py-4 bg-primary text-primary-foreground rounded-2xl font-black text-lg hover:shadow-[0_0_20px_rgba(255,0,122,0.4)] transition-all disabled:opacity-50"
         >
-          {isPending ? "Confirming..." : isConfirming ? "Processing..." : "Join ForgeX"}
+          {isPending ? "Confirming..." : isConfirming ? "Processing..." : "Join FluxID"}
         </button>
       </div>
     </div>

@@ -7,7 +7,7 @@ type Theme = "dark" | "light";
 
 function getInitialTheme(): Theme {
   if (typeof window === "undefined") return "dark";
-  const stored = localStorage.getItem("forgex-theme") as Theme | null;
+  const stored = localStorage.getItem("fluxid-theme") as Theme | null;
   if (stored === "light" || stored === "dark") return stored;
   return "dark";
 }
@@ -25,7 +25,7 @@ export default function ThemeToggle() {
     const next: Theme = theme === "dark" ? "light" : "dark";
     setTheme(next);
     document.documentElement.setAttribute("data-theme", next);
-    localStorage.setItem("forgex-theme", next);
+    localStorage.setItem("fluxid-theme", next);
   }
 
   return (

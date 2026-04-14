@@ -58,8 +58,8 @@ export default function AIInsights() {
           <Cpu size={15} style={{ color: "var(--primary)" }} />
         </div>
         <div>
-          <p style={{ color: "var(--foreground)", fontWeight: 800, fontSize: 15 }}>ForgeX Intelligence</p>
-          <p style={{ color: "var(--foreground-muted)", fontSize: 11 }}>AI-powered portfolio analysis</p>
+          <p style={{ color: "var(--foreground)", fontWeight: 800, fontSize: 15 }}>FluxID Intelligence</p>
+          <p style={{ color: "var(--foreground-muted)", fontSize: 11 }}>AI-powered liquidity analysis</p>
         </div>
       </div>
 
@@ -202,7 +202,7 @@ export default function AIInsights() {
 
         {!content && !isLoading && (
           <p style={{ color: "var(--foreground-dim)", fontSize: 12, textAlign: "center", padding: "16px 0" }}>
-            Generate AI-powered analysis of your ForgeX portfolio.
+            Generate AI-powered analysis of your FluxID wallet.
           </p>
         )}
       </div>

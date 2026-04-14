@@ -73,18 +73,18 @@ export default function AIChat() {
         <div className="fixed bottom-24 right-6 z-[80] w-96 h-[500px] rounded-3xl bg-background border border-white/10 shadow-2xl flex flex-col overflow-hidden">
           {/* Header */}
           <div className="p-4 border-b border-white/10 bg-gradient-to-r from-primary/10 to-secondary/10">
-            <h3 className="font-black text-lg">ForgeX AI Assistant</h3>
-            <p className="text-xs text-gray-400">Ask about your vaults, strategies, or DeFi concepts</p>
+            <h3 className="font-black text-lg">FluxID AI Assistant</h3>
+            <p className="text-xs text-gray-400">Ask about your wallet, liquidity score, or Stellar concepts</p>
           </div>
 
           {/* Messages */}
           <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
             {messages.length === 0 && (
               <div className="text-center text-gray-500 text-sm mt-8">
-                <p className="font-bold mb-2">Hey! I&apos;m your ForgeX AI.</p>
-                <p>Ask me anything about your vaults, yield strategies, or how VultHook works.</p>
+                <p className="font-bold mb-2">Hey! I&apos;m your FluxID AI.</p>
+                <p>Ask me anything about your wallet, liquidity score, or how FluxID works.</p>
                 <div className="flex flex-wrap gap-2 justify-center mt-4">
-                  {["How does VultHook work?", "What's my vault performance?", "Best yield strategy?"].map((q) => (
+                  {["How does FluxID work?", "What's my liquidity score?", "How is risk assessed?"].map((q) => (
                     <button
                       key={q}
                       onClick={() => { setInput(q); }}
@@ -134,7 +134,7 @@ export default function AIChat() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-                placeholder="Ask ForgeX AI..."
+                placeholder="Ask FluxID AI..."
                 className="flex-1 p-3 rounded-xl bg-white/5 border border-white/10 focus:border-primary outline-none text-sm"
               />
               <button

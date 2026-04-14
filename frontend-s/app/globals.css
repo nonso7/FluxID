@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* ─── ForgeX Design Tokens — Dark (default) ───────────────────── */
+/* ─── FluxID Design Tokens — Dark (default) ───────────────────── */
 :root,
 [data-theme="dark"] {
   --background:      #090A06;
@@ -23,7 +23,7 @@
   --error:           #8A3030;
 }
 
-/* ─── ForgeX Design Tokens — Light ───────────────────────────── */
+/* ─── FluxID Design Tokens — Light ───────────────────────────── */
 [data-theme="light"] {
   --background:      #F5F4EE;
   --surface:         #EDEBE0;
