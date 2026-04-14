@@ -19,7 +19,7 @@ const NAV_LINKS = [
   { href: "/compare",   label: "Compare",   icon: GitCompare },
   { href: "/history",   label: "History",   icon: Clock },
   { href: "/automation",label: "Automation",icon: Zap },
-  { href: "/hook",      label: "VultHook",  icon: Anchor },
+  { href: "/learn",     label: "Learn",     icon: Anchor },
 ];
 
 export default function Navbar() {
@@ -40,8 +40,8 @@ export default function Navbar() {
         {/* Logo + Wordmark */}
         <Link href="/" className="flex items-center gap-3 shrink-0 group">
           <Image
-            src="/forgex-logo.png"
-            alt="ForgeX logo"
+            src="/logo.svg"
+            alt="FluxID logo"
             width={72}
             height={72}
             className="transition-transform duration-300 group-hover:scale-105"
@@ -50,9 +50,7 @@ export default function Navbar() {
             style={{ letterSpacing: "0.16em", lineHeight: 1 }}
             className="text-2xl font-black uppercase"
           >
-            <span style={{ color: "var(--primary)" }}>FORGEX</span>
-            <span style={{ color: "var(--foreground-muted)" }} className="mx-1.5">:</span>
-            <span style={{ color: "var(--accent)" }}>VULT</span>
+            <span style={{ color: "var(--primary)" }}>FLUXID</span>
           </span>
         </Link>
 

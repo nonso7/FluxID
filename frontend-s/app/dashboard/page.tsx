@@ -37,7 +37,7 @@ export default function Dashboard() {
   if (!isConnected) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen pt-20 px-6 gap-5 text-center">
-        <Image src="/logo.svg" alt="ForgeX" width={48} height={48} />
+        <Image src="/logo.svg" alt="FluxID" width={48} height={48} />
         <h2 style={{ color: "var(--foreground)", letterSpacing: "-0.03em" }} className="text-3xl font-black">
           Connect your wallet
         </h2>
@@ -51,7 +51,7 @@ export default function Dashboard() {
   if (!isRegistered) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen pt-20 px-6 gap-5 text-center">
-        <Image src="/logo.svg" alt="ForgeX" width={48} height={48} />
+        <Image src="/logo.svg" alt="FluxID" width={48} height={48} />
         <RegisterForm onSuccess={() => refetchRegistration()} />
       </div>
     );

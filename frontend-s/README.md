@@ -1,17 +1,16 @@
-# ForgeX: Vult — Frontend
+# FluxID — Frontend
 
 <div align="center">
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.1.1-000000?style=flat-square&logo=nextdotjs)](https://nextjs.org)
-[![React](https://img.shields.io/badge/React-19.2.0-61DAFB?style=flat-square&logo=react)](https://react.dev)
+[![Next.js](https://img.shields.io/badge/Next.js-14.2-000000?style=flat-square&logo=nextdotjs)](https://nextjs.org)
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=flat-square&logo=react)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat-square&logo=typescript)](https://typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-06B6D4?style=flat-square&logo=tailwindcss)](https://tailwindcss.com)
-[![Wagmi](https://img.shields.io/badge/Wagmi-v3-8FA828?style=flat-square)](https://wagmi.sh)
-[![Network](https://img.shields.io/badge/Base-Mainnet-0052FF?style=flat-square&logo=base)](https://basescan.org)
+[![Stellar](https://img.shields.io/badge/Stellar-Soroban-14B48E?style=flat-square&logo=stellar)](https://stellar.org)
 
-Next.js 16.1.1 frontend for the ForgeX yield-native DeFi protocol on Base. 8 pages, real-time on-chain data, AI-powered insights, and a full dark/light olive green design system.
+FluxID frontend — Liquidity Identity Layer on Stellar. 10+ pages, real-time on-chain data, AI-powered insights, and a full dark/light design system.
 
-**[Live App](https://forgex-vult.vercel.app/) · [Demo Video](YOUR_DEMO_VIDEO_LINK_HERE) · [Main Repo](https://github.com/BitBand-Labs/forgeX)**
+**[Project Repo](https://github.com/StellarVhibes/FluxID) · [StellarVhibes Org](https://github.com/StellarVhibes)**
 
 </div>
 

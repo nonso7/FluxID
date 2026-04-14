@@ -421,7 +421,7 @@ export default function AutomationPage() {
           textAlign: "center",
         }}
       >
-        <Image src="/logo.svg" alt="ForgeX" width={48} height={48} />
+        <Image src="/logo.svg" alt="FluxID" width={48} height={48} />
         <h2
           style={{
             color: "var(--foreground)",
@@ -456,7 +456,7 @@ export default function AutomationPage() {
           textAlign: "center",
         }}
       >
-        <Image src="/logo.svg" alt="ForgeX" width={48} height={48} />
+        <Image src="/logo.svg" alt="FluxID" width={48} height={48} />
         <h2
           style={{
             color: "var(--foreground)",
