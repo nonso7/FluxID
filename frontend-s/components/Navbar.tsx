@@ -6,20 +6,18 @@ import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { useAccount } from "wagmi";
 import { useIsRegistered } from "@/hooks/useVaultFactory";
-import { LayoutDashboard, Vault, BarChart2, Briefcase, Anchor, GitCompare, Clock, Zap } from "lucide-react";
+import { LayoutDashboard, BarChart2, Briefcase, GitCompare, Clock, Wallet, Sparkles } from "lucide-react";
 
 const LaunchButton = dynamic(() => import("./LaunchButton"), { ssr: false });
 const ThemeToggle = dynamic(() => import("./ThemeToggle"), { ssr: false });
 
 const NAV_LINKS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/vaults",    label: "Vaults",    icon: Vault },
   { href: "/analytics", label: "Analytics", icon: BarChart2 },
-  { href: "/portfolio", label: "Portfolio", icon: Briefcase },
+  { href: "/portfolio", label: "Wallets", icon: Briefcase },
   { href: "/compare",   label: "Compare",   icon: GitCompare },
-  { href: "/history",   label: "History",   icon: Clock },
-  { href: "/automation",label: "Automation",icon: Zap },
-  { href: "/learn",     label: "Learn",     icon: Anchor },
+  { href: "/history",  label: "History",   icon: Clock },
+  { href: "/learn",    label: "Learn",     icon: Wallet },
 ];
 
 export default function Navbar() {
