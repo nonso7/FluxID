@@ -199,114 +199,84 @@ FluxID becomes:
 - Product: **FluxID**
 - Concept: **Liquidity Identity Layer**
 
-============================
+---
 
-Post-Grant Vision (Bold Version — What We Build Next)
+## 🔮 Post-Grant Vision (Bold Version — What We Build Next)
 
 Once funded, FluxID evolves beyond a simple scoring tool into a full Liquidity Identity Infrastructure Layer on Stellar.
 
-🔥 1. On-Chain Liquidity Identity (Core Primitive)
+### 🔥 1. On-Chain Liquidity Identity (Core Primitive)
 
-Non-transferable identity token (Soroban-based)
+- Non-transferable identity token (Soroban-based)
+- Represents a wallet's financial behavior over time
+- Continuously updated using on-chain transaction data
+- Becomes a portable, verifiable financial identity across applications
 
-Represents a wallet’s financial behavior over time
+### 🔥 2. Advanced Liquidity Intelligence Engine
 
-Continuously updated using on-chain transaction data
+- Move from rule-based logic → real predictive models
+- Analyze:
+  - Cash flow patterns
+  - Income stability
+  - Spending volatility
+- Forecast:
+  - Liquidity stress
+  - Default probability
+  - Short-term financial gaps
 
-Becomes a portable, verifiable financial identity across applications
+> This transforms FluxID into a real-time risk engine, not just a scoring tool.
 
-🔥 2. Advanced Liquidity Intelligence Engine
-
-Move from rule-based logic → real predictive models
-
-Analyze:
-
-Cash flow patterns
-
-Income stability
-
-Spending volatility
-
-Forecast:
-
-Liquidity stress
-
-Default probability
-
-Short-term financial gaps
-
-This transforms FluxID into a real-time risk engine, not just a scoring tool.
-
-🔥 3. Programmable Trust & Integration Layer
+### 🔥 3. Programmable Trust & Integration Layer
 
 FluxID becomes infrastructure other apps can build on.
 
-Public query endpoints / smart contract interfaces:
-
-/score/{wallet}
-
-/risk/{wallet}
-
-Enables:
-
-Lending protocols to assess borrowers
-
-Payroll systems to verify reliability
-
-Remittance apps (like IntentRemit) to optimize fund allocation
+- Public query endpoints / smart contract interfaces:
+  - `/score/{wallet}`
+  - `/risk/{wallet}`
+- Enables:
+  - Lending protocols to assess borrowers
+  - Payroll systems to verify reliability
+  - Remittance apps (like IntentRemit) to optimize fund allocation
 
 Example:
 
-“Only unlock funds if score > threshold”
+- "Only unlock funds if score > threshold"
+- "Adjust lending terms dynamically based on behavior"
 
-“Adjust lending terms dynamically based on behavior”
+### 🔥 4. Cross-Platform Reputation Aggregation
 
-🔥 4. Cross-Platform Reputation Aggregation
+- Extend beyond single-wallet analysis
+- Combine:
+  - On-chain behavior
+  - Optional off-chain signals (future phase)
+- Create: A unified financial identity across ecosystems
 
-Extend beyond single-wallet analysis
+> This is where FluxID moves closer to a global trust layer, not just a Stellar tool.
 
-Combine:
+### 🔥 5. Smart Financial Automation Layer
 
-On-chain behavior
-
-Optional off-chain signals (future phase)
-
-Create:
-
-A unified financial identity across ecosystems
-
-This is where FluxID moves closer to a global trust layer, not just a Stellar tool.
-
-🔥 5. Smart Financial Automation Layer
-
-Auto-trigger actions based on liquidity behavior:
-
-Auto-lock funds
-
-Auto-suggest savings allocations
-
-Integrate directly into remittance flows
+- Auto-trigger actions based on liquidity behavior:
+  - Auto-lock funds
+  - Auto-suggest savings allocations
+  - Integrate directly into remittance flows
 
 Example:
 
-“Based on your pattern, 30% of incoming funds will be automatically preserved”
+- "Based on your pattern, 30% of incoming funds will be automatically preserved"
 
-🔥 6. Privacy & Selective Disclosure (Future)
+### 🔥 6. Privacy & Selective Disclosure (Future)
 
-Introduce privacy-preserving identity sharing (ZK layer later)
+- Introduce privacy-preserving identity sharing (ZK layer later)
+- Users control:
+  - What data is visible
+  - What score components are shared
 
-Users control:
+---
 
-What data is visible
-
-What score components are shared
-
-🧠 Long-Term Vision
+## 🧠 Long-Term Vision
 
 FluxID becomes:
 
-A credit layer for Web3
-
-A risk engine for global finance
-
-A trust infrastructure for emerging markets
+- A **credit layer for Web3**
+- A **risk engine for global finance**
+- A **trust infrastructure for emerging markets**
