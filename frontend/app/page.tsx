@@ -1,99 +1,345 @@
-"use client";
-import { useState, useEffect } from 'react';
-import { VaultOverviewCard } from "@/components/vault-overview-card";
-import { Shield, ArrowUpFromLine, ArrowDownToLine } from "lucide-react";
+'use client'
+
+import { motion } from "framer-motion";
 import Link from "next/link";
-import { WalletButton } from "./components/WalletButton";
-import { AiInsightStream } from "./components/AiInsightStream";
-import { TransactionList } from "@/components/transaction-list";
-import { RewardSummary } from "@/components/reward-summary";
-interface Slice {
-  name: string;
-  value: number;
-}
-import { RiskChart } from "@/components/RiskChart";
+import Image from "next/image";
+import { Layers, Zap, Cpu, ArrowRight, Wallet } from "lucide-react";
+
+const FEATURES = [
+  {
+    icon: Wallet,
+    title: "Wallet Connection",
+    desc: "Connect your Freighter wallet to analyze any Stellar wallet's financial behavior and liquidity patterns.",
+    tag: "Stellar",
+  },
+  {
+    icon: Layers,
+    title: "Liquidity Score",
+    desc: "Get a dynamic score (0-100) that reflects income consistency, spending patterns, and transaction stability.",
+    tag: "Real-Time",
+  },
+  {
+    icon: Cpu,
+    title: "Risk Assessment",
+    desc: "AI-powered risk signals (Low/Medium/High) to understand financial reliability at a glance.",
+    tag: "AI-Powered",
+  },
+];
+
+const STATS = [
+  { icon: Wallet,    value: "Stellar",   label: "Built on Stellar",    accent: "var(--primary)" },
+  { icon: Layers,    value: "0-100",      label: "Liquidity Score",     accent: "var(--primary)" },
+  { icon: Zap,       value: "Instant",    label: "Real-time Analysis",  accent: "var(--primary)" },
+];
+
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.09 } },
+};
+const item = {
+  hidden: { opacity: 0, y: 18 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+};
 
 export default function Home() {
-  const [slices, setSlices] = useState<{ name: string; value: number }[] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let mounted = true;
-    setLoading(true);
-    fetch('/api/allocation')
-      .then((r) => r.json())
-      .then((data) => {
-        if (!mounted) return;
-        if (data?.slices) setSlices(data.slices);
-        else setError('No allocation data available');
-      })
-      .catch((e) => setError(String(e)))
-      .finally(() => setLoading(false));
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
   return (
-    <div className="min-h-screen md:p-8">
-      <div className="mx-auto max-w-6xl space-y-8">
-        <div className="flex items-center justify-between max-md:flex-col gap-4">
+    <div className="min-h-screen overflow-x-hidden">
+
+      {/* ── Hero ── */}
+      <section className="relative max-w-7xl mx-auto px-5 pt-24 pb-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[55vh]">
+
+        {/* Left copy */}
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          animate="show"
+          className="relative z-10"
+        >
+
+          {/* Headline */}
+          <motion.h1
+            variants={item}
+            style={{ letterSpacing: "-0.04em", lineHeight: 1.0, color: "var(--foreground)" }}
+            className="text-7xl sm:text-8xl font-black mb-6"
+          >
+            Liquidity<br />
+            <span style={{ color: "var(--primary)" }}>Identity</span><br />
+            Layer.
+          </motion.h1>
+
+          {/* Sub */}
+          <motion.p
+            variants={item}
+            style={{ color: "var(--foreground-muted)", lineHeight: 1.65 }}
+            className="text-xl mb-10 max-w-lg"
+          >
+            FluxID turns any Stellar wallet into a real-time financial identity.
+            Understand how money behaves, not just how much it holds.
+          </motion.p>
+
+          {/* Flow chips */}
+          <motion.div variants={item} className="flex flex-wrap items-center gap-2 mb-10">
+            {[
+              { icon: Wallet, label: "Stellar Wallet" },
+              { icon: Layers, label: "Liquidity Score" },
+              { icon: Cpu, label: "Risk Analysis" },
+            ].map(({ icon: Icon, label }, i, arr) => (
+              <div key={label} className="flex items-center gap-2">
+                <div
+                  style={{ background: "var(--card)", border: "1px solid var(--border)", color: "var(--foreground-muted)" }}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold"
+                >
+                  <Icon size={11} style={{ color: "var(--primary)" }} />
+                  {label}
+                </div>
+                {i < arr.length - 1 && (
+                  <ArrowRight size={13} style={{ color: "var(--primary)", opacity: 0.6 }} />
+                )}
+              </div>
+            ))}
+          </motion.div>
+
+          {/* CTA */}
+          <motion.div variants={item} className="flex flex-wrap gap-3">
+            <Link href="/dashboard" className="btn btn-primary text-sm flex items-center gap-2">
+              Launch App <Zap size={13} />
+            </Link>
+            <Link href="#how-it-works" className="btn btn-outline text-sm flex items-center gap-2">
+              How FluxID Works <ArrowRight size={13} />
+            </Link>
+          </motion.div>
+        </motion.div>
+
+        {/* Right — hero image */}
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="hidden lg:flex items-center justify-center relative"
+          style={{ minHeight: 560 }}
+        >
+          {/* Outer glow pulse ring */}
+          <motion.div
+            animate={{ scale: [1, 1.06, 1], opacity: [0.18, 0.32, 0.18] }}
+            transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+              position: "absolute",
+              inset: -24,
+              borderRadius: 40,
+              background: "radial-gradient(ellipse at center, var(--primary) 0%, transparent 70%)",
+              filter: "blur(18px)",
+              pointerEvents: "none",
+            }}
+          />
+
+          {/* Image — gentle float */}
+          <motion.div
+            animate={{ y: [0, -10, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            style={{ position: "relative" }}
+          >
+            <Image
+              src="/hero-hook.png"
+              alt="FluxID"
+              width={500}
+              height={500}
+              style={{
+                objectFit: "cover",
+                borderRadius: 0,
+              }}
+              priority
+            />
+          </motion.div>
+        </motion.div>
+
+        {/* Subtle horizontal divider at bottom */}
+        <div
+          style={{ background: "var(--border)", height: 1 }}
+          className="absolute bottom-0 left-5 right-5"
+        />
+      </section>
+
+      {/* ── Stats strip ── */}
+      <section className="px-6 md:px-16 py-6">
+        <div
+          className="max-w-5xl mx-auto px-10 py-5 flex flex-col sm:flex-row items-stretch sm:items-center divide-y sm:divide-y-0 sm:divide-x rounded-2xl"
+          style={{
+            background: "var(--surface)",
+            border: "1px solid var(--border)",
+            "--tw-divide-color": "var(--border)",
+          } as React.CSSProperties}
+        >
+          {STATS.map(({ icon: Icon, value, label, accent }, i) => (
+            <motion.div
+              key={value}
+              initial={{ opacity: 0, y: 8 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.08, duration: 0.4 }}
+              className="flex items-center gap-3 flex-1 px-6 py-3 sm:py-0 first:pl-0 last:pr-0"
+            >
+              <div
+                style={{ background: `color-mix(in srgb, ${accent} 12%, transparent)`, borderRadius: 10 }}
+                className="w-9 h-9 flex items-center justify-center shrink-0"
+              >
+                <Icon size={16} style={{ color: accent }} />
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <span style={{ color: accent, fontWeight: 900, fontSize: 15, letterSpacing: "-0.02em", lineHeight: 1 }}>
+                  {value}
+                </span>
+                <span style={{ color: "var(--foreground-muted)", fontSize: 11, lineHeight: 1.3 }}>
+                  {label}
+                </span>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Features ── */}
+      <section id="how-it-works" className="max-w-7xl mx-auto px-5 py-28">
+        {/* Section header — scroll reveal */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.55 }}
+          className="mb-14"
+        >
+          <span className="label block mb-3">How it works</span>
+          <h2 style={{ color: "var(--foreground)", letterSpacing: "-0.03em" }} className="text-4xl font-black">
+            Three layers.<br />One identity.
+          </h2>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {FEATURES.map(({ icon: Icon, title, desc, tag }, i) => (
+            <motion.div
+              key={title}
+              initial={{ opacity: 0, y: 36 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5, delay: i * 0.12 }}
+              whileHover={{ y: -6, transition: { duration: 0.22, ease: "easeOut" } }}
+              style={{
+                background: "var(--card)",
+                border: "1px solid var(--border)",
+                position: "relative",
+                overflow: "hidden",
+              }}
+              className="rounded-2xl p-6 group cursor-default"
+            >
+              {/* Top glow bar — slides in on hover */}
+              <motion.div
+                initial={{ scaleX: 0, opacity: 0 }}
+                whileHover={{ scaleX: 1, opacity: 1 }}
+                transition={{ duration: 0.25 }}
+                style={{
+                  position: "absolute",
+                  top: 0, left: 0, right: 0,
+                  height: 2,
+                  background: "linear-gradient(90deg, transparent, var(--primary), transparent)",
+                  transformOrigin: "left",
+                }}
+              />
+
+              {/* Step number */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: 18, right: 18,
+                  color: "var(--border)",
+                  fontWeight: 900,
+                  fontSize: 36,
+                  lineHeight: 1,
+                  letterSpacing: "-0.04em",
+                  userSelect: "none",
+                  transition: "color 0.2s",
+                }}
+                className="group-hover:text-[var(--primary-muted)]"
+              >
+                0{i + 1}
+              </div>
+
+              {/* Icon */}
+              <div
+                style={{ background: "var(--primary-muted)", borderRadius: 10 }}
+                className="w-10 h-10 flex items-center justify-center mb-5"
+              >
+                <Icon size={18} style={{ color: "var(--primary)" }} />
+              </div>
+
+              {/* Tag */}
+              <span className="pill pill-accent text-[10px] mb-3 inline-block">{tag}</span>
+
+              <h3
+                style={{ color: "var(--foreground)", fontWeight: 800, fontSize: 17, letterSpacing: "-0.02em" }}
+                className="mb-2"
+              >
+                {title}
+              </h3>
+              <p style={{ color: "var(--foreground-muted)", fontSize: 14, lineHeight: 1.65 }}>{desc}</p>
+
+              {/* Learn more — slides up on hover */}
+              <motion.div
+                initial={{ opacity: 0, y: 6 }}
+                whileHover={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.18 }}
+                style={{ color: "var(--primary)", fontSize: 12, fontWeight: 700 }}
+                className="mt-5 flex items-center gap-1"
+              >
+                Learn more <ArrowRight size={11} />
+              </motion.div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── CTA strip ── */}
+      <section
+        style={{ background: "var(--card)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}
+        className="py-20 px-5"
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.55 }}
+          className="max-w-2xl mx-auto text-center"
+        >
+          <h2
+            style={{ color: "var(--foreground)", letterSpacing: "-0.04em" }}
+            className="text-4xl font-black mb-4"
+          >
+            Start analyzing wallets today.
+          </h2>
+          <p style={{ color: "var(--foreground-muted)" }} className="text-base mb-8">
+            Connect your Freighter wallet. Analyze any wallet. Understand financial behavior.
+          </p>
+          <Link href="/dashboard" className="btn btn-primary text-sm inline-flex items-center gap-2">
+            <Zap size={14} /> Launch App
+          </Link>
+        </motion.div>
+      </section>
+
+      {/* ── Footer ── */}
+      <footer
+        style={{ borderTop: "1px solid var(--border)" }}
+        className="py-8 px-5"
+      >
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <Shield className="h-10 w-10 text-primary" />
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">XHedge</h1>
-              <p className="text-muted-foreground">Volatility Shield for Weak Currencies</p>
-            </div>
+            <Image src="/logo.svg" alt="FluxID" width={48} height={48} />
+            <span style={{ color: "var(--foreground-dim)", fontSize: 24, letterSpacing: "0.06em", fontWeight: 700 }}>
+              FLUXID
+            </span>
           </div>
-          <div id="tour-sidebar-wallet">
-            <WalletButton />
-          </div>
+          <span style={{ color: "var(--foreground-dim)", fontSize: 11 }}>
+            © 2026 FluxID · Built on Stellar
+          </span>
         </div>
-
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <VaultOverviewCard />
-          </div>
-          <div className="lg:col-span-1 flex">
-            <div className="w-full h-full">
-              <RiskChart score={45} />
-            </div>
-          </div>
-        </div>
-
-        <RewardSummary />
-
-        <div className="grid gap-4 md:grid-cols-2">
-          <Link
-            href="/vault"
-            className="flex items-center gap-4 rounded-lg border bg-card p-6 transition-colors hover:bg-accent"
-          >
-            <ArrowUpFromLine className="h-8 w-8 text-primary" />
-            <div>
-              <h2 className="font-semibold text-foreground">Deposit Funds</h2>
-              <p className="text-sm text-muted-foreground">Deposit assets into the vault</p>
-            </div>
-          </Link>
-
-          <Link
-            href="/vault"
-            className="flex items-center gap-4 rounded-lg border bg-card p-6 transition-colors hover:bg-accent"
-          >
-            <ArrowDownToLine className="h-8 w-8 text-primary" />
-            <div>
-              <h2 className="font-semibold text-foreground">Withdraw Funds</h2>
-              <p className="text-sm text-muted-foreground">
-                Withdraw your assets from the vault
-              </p>
-            </div>
-          </Link>
-        </div>
-
-        <TransactionList />
-
-        <AiInsightStream />
-      </div >
-    </div >
+      </footer>
+    </div>
   );
 }

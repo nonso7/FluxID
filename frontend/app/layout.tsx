@@ -1,39 +1,47 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { Providers } from "./providers";
-import { DashboardLayout } from "@/components/dashboard-layout";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
+import ClientLayout from "@/components/ClientLayout";
 
 export const metadata: Metadata = {
-  title: "XHedge - Volatility Shield",
-  description: "Stablecoin Volatility Shield for Weak Currencies",
+  metadataBase: new URL("https://fluxid.stellarvhibes.org"),
+  title: { template: "%s | FluxID", default: "FluxID — Liquidity Identity Layer on Stellar" },
+  description:
+    "FluxID turns any wallet into a real-time financial identity. Analyze liquidity, assess risk, and build financial trust on Stellar.",
+  keywords: ["FluxID", "Liquidity Identity", "Stellar", "Soroban", "financial identity", "risk assessment", "DeFi"],
+  authors: [{ name: "FluxID" }],
+  creator: "FluxID",
   openGraph: {
-    title: "XHedge - Volatility Shield",
-    description: "Stablecoin Volatility Shield for Weak Currencies",
-    url: "https://xhedge.app",
-    siteName: "XHedge",
     type: "website",
+    title: "FluxID — Liquidity Identity Layer",
+    description: "Turn any wallet into a real-time financial identity on Stellar.",
+    siteName: "FluxID",
+    images: [{ url: "/logo.svg", width: 44, height: 44, alt: "FluxID Logo" }],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "XHedge - Volatility Shield",
-    description: "Stablecoin Volatility Shield for Weak Currencies",
+    card: "summary",
+    title: "FluxID",
+    description: "Liquidity Identity Layer on Stellar",
+    images: ["/logo.svg"],
   },
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/logo.svg",
+  },
+  robots: { index: true, follow: true },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export const viewport: Viewport = {
+  themeColor: [{ media: "(prefers-color-scheme: dark)", color: "#090A06" }],
+  width: "device-width",
+  initialScale: 1,
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body>
-        <Providers>
-          <ErrorBoundary>
-            <DashboardLayout>{children}</DashboardLayout>
-          </ErrorBoundary>
-        </Providers>
+    <html lang="en">
+      <body className="antialiased">
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
