@@ -240,18 +240,21 @@ Everything else (dashboard, suggestions, visuals) exists to support and explain 
 
 ---
 
-## Target User (Focused Scope)
+## Target User (Focused MVP Entry Point)
 
-For MVP, FluxID focuses on:
+While FluxID is designed as a general-purpose trust layer that any platform can use, the MVP focuses on a specific starting point:
 
-**Freelancers in emerging markets (starting with West Africa)**
+**Freelancers in emerging markets (starting with West Africa).**
 
-Why this group:
+### Why this group:
 
 - They rely heavily on cross-border payments  
 - They lack formal credit or reputation systems  
 - Trust directly affects how and when they get paid  
 
+This group provides a clear, real-world use case to demonstrate how wallet-based trust scoring can solve actual financial problems.
+
+Over time, FluxID expands beyond this group into a broader infrastructure layer usable by lending platforms, marketplaces, and other financial systems.
 ---
 
 ## MVP Features (5-Day Build Sprint)
