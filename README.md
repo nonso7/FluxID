@@ -11,9 +11,31 @@
 
 FluxID is a liquidity intelligence layer built on Stellar that turns any wallet into a real-time financial identity.
 
-Instead of just showing balances or transaction history, FluxID looks at _how money behaves_ — how it flows in, flows out, and how stable that flow is over time.
+Instead of just showing balances or transaction history, FluxID looks at how money behaves — how it flows in, flows out, and how stable that flow is over time.
 
-The goal is simple: Help people and platforms understand **how financially reliable a wallet is**, not just how much it holds.
+At its core, FluxID does one thing:
+
+**It turns wallet behavior into a simple trust score.**
+
+The goal is simple: help people and platforms understand how financially reliable a wallet is, not just how much it holds.
+
+---
+
+## What FluxID Really Is
+
+FluxID is not just an app or a dashboard.
+
+It is a **decision layer**.
+
+It answers one simple question:
+
+> “Can this wallet be trusted financially?”
+
+Instead of guessing, platforms can:
+
+- Query a wallet’s behavior  
+- Get a simple trust score  
+- Make decisions instantly  
 
 ---
 
@@ -21,20 +43,20 @@ The goal is simple: Help people and platforms understand **how financially relia
 
 Right now, both traditional finance and crypto miss something important:
 
-They track **what you have**, but not **how you behave financially**.
+They track what you have, but not how you behave financially.
 
 Because of this:
 
-- SMEs struggle to access capital due to lack of trust signals
-- Freelancers get delayed payments or poor terms
-- Cross-border transactions come with uncertainty
-- Credit systems are slow, country-specific, or completely absent
+- Freelancers struggle to prove financial reliability  
+- Payments get delayed due to lack of trust  
+- Cross-border transactions come with uncertainty  
+- Credit systems are slow, fragmented, or unavailable  
 
 Even in Web3:
 
-- Wallets are mostly anonymous
-- Reputation is fragmented
-- There's no standard way to measure financial reliability
+- Wallets are anonymous  
+- Reputation is fragmented  
+- There’s no standard trust layer  
 
 So trust becomes guesswork.
 
@@ -46,16 +68,77 @@ FluxID introduces a **Liquidity Identity** — a dynamic score that reflects how
 
 It analyzes:
 
-- Income consistency
-- Spending patterns
-- Transaction frequency
-- Flow stability
+- Income consistency  
+- Spending patterns  
+- Transaction frequency  
+- Flow stability  
 
 And produces:
 
-- A **Liquidity Score**
-- A simple **risk signal**
-- A clear view of financial behavior
+- A **Liquidity Score (0–100)**  
+- A simple **risk signal (Low / Medium / High)**  
+- A clear view of financial behavior  
+
+---
+
+## Real Use Cases
+
+FluxID is built as infrastructure — other platforms can plug into it and use it to make decisions.
+
+### Lending Platforms
+
+- Score = 82 → Approve loan  
+- Score = 34 → Reduce or reject  
+
+No paperwork. Just behavior.
+
+---
+
+### Freelance / Job Platforms
+
+- Consistent inflow + stable spending → Reliable worker  
+
+Enables better terms, faster payouts, and more trust.
+
+---
+
+### Remittance Apps
+
+- Detect poor saving behavior → Suggest better allocation  
+
+Leads to smarter money usage and structured financial decisions.
+
+---
+
+### Marketplaces / Payment Platforms
+
+- Trusted users → Allow pay-later or flexible terms  
+
+Unlocks new financial models.
+
+---
+
+## Core Principle
+
+FluxID focuses on one core function:
+
+> Turn wallet history into a trust score.
+
+Everything else (dashboard, suggestions, visuals) exists to support and explain that score.
+
+---
+
+## Target User (MVP Focus)
+
+FluxID is designed as a general-purpose trust layer, but the MVP focuses on a clear starting point:
+
+**Freelancers in emerging markets (starting with West Africa).**
+
+Why:
+
+- Heavy reliance on cross-border payments  
+- No formal credit systems  
+- Trust directly impacts income and payment speed  
 
 ---
 
@@ -63,53 +146,74 @@ And produces:
 
 ### Core Features
 
-- Wallet connection (Freighter / Stellar wallet)
-- Fetch recent transaction history (via Stellar SDK / Horizon)
+- Wallet connection (Freighter / Stellar wallet)  
+- Fetch transaction history (Stellar SDK / Horizon)  
+
 - Rule-based Liquidity Score:
-  - Inflow consistency
-  - Outflow volatility
-  - Transaction frequency
+  - Inflow consistency  
+  - Outflow volatility  
+  - Transaction frequency  
+
 - Simple dashboard:
-  - Liquidity score
-  - Flow summary (basic visualization)
-  - Risk indicator (Low / Medium / High)
-- Lightweight suggestion system
+  - Large, clear score display  
+  - Flow summary  
+  - Risk indicator (Low / Medium / High)  
+
+- Lightweight suggestion system  
+  - Example: “Consider preserving part of incoming funds”  
+
+---
+
+### UI/UX Focus
+
+- Clean and minimal  
+- Score-first (visible immediately)  
+- Understandable in under 3 seconds  
+- Mobile-first  
+
+---
 
 ### What We Keep Simple
 
-- AI will be **rule-based + heuristic**, not heavy ML
-- Predictions will be **basic but clear** (no overpromising)
-- No complex integrations — focus on one clean flow
+- Rule-based logic (no heavy ML for MVP)  
+- Basic predictions (clear, not overpromised)  
+- No complex integrations  
+
+---
+
+## Demo Flow
+
+1. User connects wallet  
+2. Transaction history is fetched  
+3. Liquidity score is calculated  
+4. Dashboard displays:
+   - Score  
+   - Risk level  
+   - Flow insight  
+5. User sees a simple suggestion  
 
 ---
 
 ## Tech Stack
 
 ### Blockchain
-- Stellar SDK (JavaScript)
-- Soroban (minimal usage for extensibility)
+- Stellar SDK (JavaScript)  
+- Soroban (minimal usage for extensibility)  
 
 ### Data / Logic
-- Rule-based scoring engine (JavaScript / Node.js)
+- Rule-based scoring engine (Node.js)  
 
 ### Frontend
-- Next.js (mobile-first PWA)
-- TypeScript
-- Tailwind CSS
+- Next.js (mobile-first PWA)  
+- TypeScript  
+- Tailwind CSS  
 
 ### Wallet
-- Freighter Wallet
+- Freighter Wallet  
 
 ---
 
-## Demo Flow
-
-1. User connects wallet
-2. System fetches transaction history
-3. Liquidity score is calculated
-4. Dashboard displays: Score, Risk level, Flow insight
-5. User sees a simple actionable suggestion
-
+## Project Structure
 ---
 
 ## Project Structure
