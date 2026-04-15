@@ -215,10 +215,6 @@ Why:
 
 ## Project Structure
 ---
-
-## Project Structure
-
-```
 FluxID/
 ├── smartcontract/     # Soroban smart contracts
 ├── frontend/          # Next.js PWA frontend
@@ -256,16 +252,14 @@ cargo build
 - [Frontend Issues](./docs/ISSUES-FRONTEND.md)
 - [Backend & AI Issues](./docs/ISSUES-BACKEND-AI.md)
 
-Guides:
-- [Smart Contract Guide](./docs/SMARTCONTRACT_GUIDE.md)
-- [Frontend Integration Guide](./docs/FRONTEND_GUIDE.md)
+---
+
+## Vision
+
+FluxID is building a new primitive:
+Liquidity Identity
+A real-time, behavior-based trust layer for Web3.
 
 ---
 
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md).
-
----
-
-*Project maintained by @bbkenny*
+*Project maintained by @bbkenny and @xqcxx*
