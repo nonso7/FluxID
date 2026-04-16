@@ -1,4 +1,3 @@
-
 # Frontend Issues - FluxID
 
 This document tracks UI/UX and integration tasks for the FluxID dashboard.
@@ -6,7 +5,7 @@ This document tracks UI/UX and integration tasks for the FluxID dashboard.
 Core Principle:
 The UI must make one thing obvious in under 3 seconds:
 
-> “This wallet has a trust score.”
+> "This wallet has a trust score."
 
 Everything else supports that.
 
@@ -17,36 +16,36 @@ Everything else supports that.
 ### Issue #FE-1: Project Scaffold & Theme
 
 **Category:** [UI]  
-**Status:** PENDING  
+**Status:** COMPLETED  
 **Priority:** Critical  
 
 **Description:** Initialize Next.js app with FluxID branding focused on clarity and minimalism.
 
 **Tasks:**
 
-- [ ] Configure `tailwind.config.ts` (dark mode focus)
-- [ ] Setup `globals.css` (clean, minimal palette — avoid visual clutter)
-- [ ] Define design tokens (spacing, typography, colors)
-- [ ] Implement base `Layout` (no heavy sidebar — keep it simple)
-- [ ] Ensure mobile-first structure from start
+- [x] Configure `tailwind.config.ts` (dark mode focus)
+- [x] Setup `globals.css` (clean, minimal palette)
+- [x] Define design tokens (spacing, typography, colors)
+- [x] Implement base `Layout`
+- [x] Ensure mobile-first structure from start
 
 ---
 
 ### Issue #FE-2: Freighter Wallet Integration
 
 **Category:** [INTEGRATION]  
-**Status:** PENDING  
+**Status:** COMPLETED  
 **Priority:** Critical  
 
 **Description:** Handle wallet connection globally.
 
 **Tasks:**
 
-- [ ] Create `FreighterContext`
-- [ ] Implement connect/disconnect logic
-- [ ] Auto-reconnect on refresh
-- [ ] Display connected wallet address (truncated)
-- [ ] Handle “wallet not installed” state cleanly
+- [x] Create `FreighterContext`
+- [x] Implement connect/disconnect logic
+- [x] Auto-reconnect on refresh
+- [x] Display connected wallet address (truncated)
+- [x] Handle "wallet not installed" state cleanly
 
 ---
 
@@ -55,64 +54,56 @@ Everything else supports that.
 ### Issue #FE-3: Wallet Connection Flow
 
 **Category:** [UI/INTEGRATION]  
-**Status:** PENDING  
+**Status:** COMPLETED  
 **Priority:** High  
 
 **Description:** Smooth wallet connection experience.
 
 **Tasks:**
 
-- [ ] Prominent “Connect Wallet” CTA (centered on first load)
-- [ ] Detect Freighter wallet
-- [ ] Display wallet address after connection
-- [ ] Optional: show basic balance (keep minimal)
-- [ ] Loading state during connection
+- [x] Prominent "Connect Wallet" CTA
+- [x] Detect Freighter wallet
+- [x] Display wallet address after connection
+- [x] Loading state during connection
 
 ---
 
-### Issue #FE-4: Liquidity Score Display (MOST IMPORTANT)
+### Issue #FE-4: Liquidity Score Display
 
 **Category:** [UI]  
-**Status:** PENDING  
+**Status:** COMPLETED  
 **Priority:** Critical  
 
 **Description:** The main product moment — must be instantly clear.
 
 **Tasks:**
 
-- [ ] Fetch transaction history from Horizon
-- [ ] Integrate rule-based scoring engine
-- [ ] Display score prominently (center of screen)
-- [ ] Large typography (dominant visual element)
-- [ ] Optional: circular gauge OR bold numeric display (prefer clarity over fancy UI)
-- [ ] Label clearly: “Liquidity Score”
-
-**Success Criteria:**
-
-User understands their score in under 3 seconds.
+- [x] Fetch transaction history from Horizon
+- [x] Integrate rule-based scoring engine
+- [x] Display score prominently (center of screen)
+- [x] Large typography (dominant visual element)
+- [x] Circular gauge display
+- [x] Label clearly: "Liquidity Score"
 
 ---
 
 ### Issue #FE-5: Risk Indicator
 
 **Category:** [UI]  
-**Status:** PENDING  
+**Status:** COMPLETED  
 **Priority:** High  
 
 **Description:** Simple risk classification tied to score.
 
 **Tasks:**
 
-- [ ] Display risk badge:
-  - Low (green)
-  - Medium (yellow)
-  - High (red)
-- [ ] Position near score (not separate)
-- [ ] Keep explanation minimal (no overload)
+- [x] Display risk badge: Low (green), Medium (yellow), High (red)
+- [x] Position near score
+- [x] Keep explanation minimal
 
 ---
 
-## Phase 3: Supporting Insights (Lightweight)
+## Phase 3: Supporting Insights
 
 ### Issue #FE-6: Transaction Flow Chart
 
@@ -124,11 +115,9 @@ User understands their score in under 3 seconds.
 
 **Tasks:**
 
-- [ ] Install `recharts`
-- [ ] Create `FlowChart` component
+- [ ] Create FlowChart component
 - [ ] Display last 30 days activity
 - [ ] Show inflow vs outflow
-- [ ] Keep chart simple (no complex interactions)
 
 ---
 
@@ -145,34 +134,28 @@ User understands their score in under 3 seconds.
 - [ ] Total inflow (30 days)
 - [ ] Total outflow (30 days)
 - [ ] Transaction count
-- [ ] Keep layout minimal (avoid dashboard clutter)
 
 ---
 
-## Phase 4: Suggestions (Explain the Score)
+## Phase 4: Suggestions
 
 ### Issue #FE-8: Actionable Recommendations
 
 **Category:** [UI]  
-**Status:** PENDING  
+**Status:** COMPLETED  
 **Priority:** Medium  
 
 **Description:** Provide simple behavioral insights.
 
 **Tasks:**
 
-- [ ] Rule-based suggestion engine
-- [ ] Display 1–2 suggestions max (do NOT overload)
-- [ ] Use clear, human language
-
-**Examples:**
-
-- “Your spending is inconsistent — consider stabilizing outflows.”
-- “You receive funds regularly — consider saving a fixed portion.”
+- [x] Rule-based suggestion engine
+- [x] Display 1-2 suggestions max
+- [x] Use clear, human language
 
 ---
 
-## Phase 5: UX Polish (Demo Critical)
+## Phase 5: UX Polish
 
 ### Issue #FE-9: Empty & Error States
 
@@ -184,9 +167,9 @@ User understands their score in under 3 seconds.
 
 **Tasks:**
 
-- [ ] No transaction history → show friendly message
-- [ ] Network errors → retry UI
-- [ ] Wallet not connected → clear CTA state
+- [ ] No transaction history message
+- [ ] Network errors retry UI
+- [ ] Wallet not connected state
 
 ---
 
@@ -201,8 +184,7 @@ User understands their score in under 3 seconds.
 **Tasks:**
 
 - [ ] Skeleton loader for score
-- [ ] Loading indicator during transaction fetch
-- [ ] Prevent UI flicker
+- [ ] Loading indicator
 
 ---
 
@@ -217,38 +199,12 @@ User understands their score in under 3 seconds.
 **Tasks:**
 
 - [ ] Optimize for small screens
-- [ ] Ensure score remains dominant on mobile
 - [ ] Test on multiple device sizes
 
 ---
 
-## Final UX Goal
+## Success Metrics
 
-The product should feel like:
-
-- One screen
-- One idea
-- One insight
-
-User flow:
-
-Connect wallet → See score → Understand instantly
-
----
-
-## What to Avoid
-
-- Too many charts  
-- Overly complex UI  
-- Multiple competing sections  
-- Anything that distracts from the score  
-
----
-
-## Success Metric (Hackathon Focus)
-
-A judge should:
-
-- Understand the product in 3 seconds  
-- See the score immediately  
-- Follow the demo without confusi
+- Connect wallet -> See score -> Understand instantly
+- Score displayed prominently in under 3 seconds
+- Clean, minimal UI focused on one idea
