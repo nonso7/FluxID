@@ -283,39 +283,6 @@ export default function Home() {
             </motion.div>
           ))}
         </div>
-
-              {/* Icon */}
-              <div
-                style={{ background: "var(--primary-muted)", borderRadius: 10 }}
-                className="w-10 h-10 flex items-center justify-center mb-5"
-              >
-                <Icon size={18} style={{ color: "var(--primary)" }} />
-              </div>
-
-              {/* Tag */}
-              <span className="pill pill-accent text-[10px] mb-3 inline-block">{tag}</span>
-
-              <h3
-                style={{ color: "var(--foreground)", fontWeight: 800, fontSize: 17, letterSpacing: "-0.02em" }}
-                className="mb-2"
-              >
-                {title}
-              </h3>
-              <p style={{ color: "var(--foreground-muted)", fontSize: 14, lineHeight: 1.65 }}>{desc}</p>
-
-              {/* Learn more — slides up on hover */}
-              <motion.div
-                initial={{ opacity: 0, y: 6 }}
-                whileHover={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.18 }}
-                style={{ color: "var(--primary)", fontSize: 12, fontWeight: 700 }}
-                className="mt-5 flex items-center gap-1"
-              >
-                Learn more <ArrowRight size={11} />
-              </motion.div>
-            </motion.div>
-          ))}
-        </div>
       </section>
 
       {/* ── Footer ── */}
