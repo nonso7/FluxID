@@ -11,7 +11,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       <Sidebar />
         <div 
           className="fixed right-6 bottom-6"
-          style={{ left: "calc(var(--sidebar-width, 248px) + 24px)", top: 104 }}
+          style={{ left: "calc(var(--sidebar-width, 248px) + 36px)", top: 120 }}
         >
           <div 
             style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 20 }}
