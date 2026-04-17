@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useFreighter, truncateAddress } from "../context/FreighterContext";
 import { analyzeWallet, getSuggestions, WalletAnalysis } from "../../lib/scoring";
@@ -21,6 +22,7 @@ const item: Variants = {
 };
 
 export default function Dashboard() {
+  const router = useRouter();
   const { publicKey: address, isConnected, isLoading: isConnecting, error, connect } = useFreighter();
   const { showToast } = useToast();
   const [analyzeAddress, setAnalyzeAddress] = useState("");
@@ -36,6 +38,12 @@ export default function Dashboard() {
       setShowOnboarding(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (!isConnecting && !isConnected) {
+      router.push("/");
+    }
+  }, [isConnecting, isConnected, router]);
 
   const handleCloseOnboarding = () => {
     setShowOnboarding(false);
