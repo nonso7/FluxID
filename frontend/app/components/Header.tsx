@@ -7,7 +7,7 @@ import { useFreighter, truncateAddress } from "../context/FreighterContext";
 import { Wallet, LogOut, Bell, ChevronDown } from "lucide-react";
 
 export default function Header() {
-  const { publicKey: address, isConnected, disconnect } = useFreighter();
+  const { publicKey: address, isConnected, isLoading, connect, disconnect } = useFreighter();
 
   return (
     <motion.header
@@ -77,8 +77,13 @@ export default function Header() {
               </button>
             </div>
           ) : (
-            <button className="btn btn-primary text-sm py-2">
-              Connect Wallet
+            <button
+              onClick={connect}
+              disabled={isLoading}
+              className="btn btn-primary text-sm py-2 flex items-center gap-2 disabled:opacity-60"
+            >
+              <Wallet size={14} />
+              {isLoading ? "Connecting..." : "Connect Wallet"}
             </button>
           )}
         </div>

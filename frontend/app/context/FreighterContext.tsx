@@ -14,7 +14,7 @@ import {
   isConnected as freighterIsConnected,
   getPublicKey,
   isAllowed,
-  setAllowed,
+  requestAccess,
 } from "@stellar/freighter-api";
 
 /* ── Types ───────────────────────────────────────────── */
@@ -123,13 +123,22 @@ export function FreighterProvider({ children }: { children: ReactNode }) {
           ...prev,
           isInstalled: false,
           isLoading: false,
-          error: "Freighter extension not found. Please install it.",
+          error:
+            "Freighter extension not found. Install it from freighter.app and refresh.",
         }));
         return;
       }
 
-      await setAllowed();
-      const pubKey = await getPublicKey();
+      // requestAccess triggers the Freighter approval popup and returns the
+      // connected public key. Falls back to getPublicKey if already approved.
+      let pubKey = await requestAccess();
+      if (!pubKey) {
+        pubKey = await getPublicKey();
+      }
+
+      if (!pubKey) {
+        throw new Error("Could not retrieve wallet address");
+      }
 
       setState({
         isInstalled: true,
@@ -139,10 +148,18 @@ export function FreighterProvider({ children }: { children: ReactNode }) {
         error: null,
       });
     } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : typeof err === "string"
+          ? err
+          : "Failed to connect";
       setState((prev) => ({
         ...prev,
         isLoading: false,
-        error: err instanceof Error ? err.message : "Failed to connect",
+        error: message.includes("User declined")
+          ? "Connection rejected in Freighter."
+          : message,
       }));
     }
   }, []);
