@@ -315,16 +315,16 @@ export default function Home() {
       {/* ── Footer ── */}
       <footer
         style={{ background: "var(--card)", borderTop: "1px solid var(--border)" }}
-        className="py-12 px-5"
+        className="py-8 px-5"
       >
-        <div className="max-w-2xl mx-auto text-center mb-8">
+        <div className="max-w-2xl mx-auto text-center mb-6">
           <h2
             style={{ color: "var(--foreground)", letterSpacing: "-0.04em" }}
-            className="text-3xl font-black mb-3"
+            className="text-2xl font-black mb-2"
           >
             Start analyzing wallets today.
           </h2>
-          <p style={{ color: "var(--foreground-muted)" }} className="text-base mb-6">
+          <p style={{ color: "var(--foreground-muted)" }} className="text-sm mb-4">
             Connect your Freighter wallet. Analyze any wallet. Understand financial behavior.
           </p>
           <Link href="/dashboard" className="btn btn-primary text-sm inline-flex items-center gap-2">
@@ -332,7 +332,7 @@ export default function Home() {
           </Link>
         </div>
         
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 pt-6" style={{ borderTop: "1px solid var(--border)" }}>
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 pt-4" style={{ borderTop: "1px solid var(--border)" }}>
           <div className="flex items-center gap-2">
             <Image src="/fluxID-logo.png" alt="FluxID" width={36} height={36} />
             <span style={{ fontSize: 20, fontWeight: 700, letterSpacing: "0.04em" }}>
