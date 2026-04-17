@@ -18,7 +18,7 @@ export default function Header() {
         border: "1px solid var(--border)",
         borderRadius: 40
       }}
-      className="fixed top-6 left-6 right-6 z-40 h-20"
+      className="fixed top-4 left-4 right-4 z-40 h-16"
     >
       <div className="h-full max-w-[1600px] mx-auto px-6 flex items-center justify-between">
         {/* Left: Logo */}
