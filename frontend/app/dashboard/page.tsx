@@ -3,16 +3,14 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useFreighter, truncateAddress } from "../context/FreighterContext";
-import { analyzeWallet, getSuggestions, LiquidityScore } from "../../lib/scoring";
+import { analyzeWallet, getSuggestions, WalletAnalysis } from "../../lib/scoring";
+import FlowChart from "../components/FlowChart";
+import FlowSummary from "../components/FlowSummary";
+import { ScoreSkeleton } from "../components/Skeletons";
 import Image from "next/image";
-import { Layers, Wallet, TrendingUp, AlertCircle, RefreshCw, ExternalLink } from "lucide-react";
+import { Layers, Wallet, TrendingUp, AlertCircle, RefreshCw, AlertTriangle } from "lucide-react";
 
 import type { Variants } from "framer-motion";
-
-const stagger: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.08 } },
-};
 
 const item: Variants = {
   hidden: { opacity: 0, y: 14 },
@@ -23,7 +21,8 @@ export default function Dashboard() {
   const { address, isConnected, isConnecting, error, connect } = useFreighter();
   const [analyzeAddress, setAnalyzeAddress] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [scoreData, setScoreData] = useState<LiquidityScore | null>(null);
+  const [analysis, setAnalysis] = useState<WalletAnalysis | null>(null);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   useEffect(() => {
@@ -37,18 +36,13 @@ export default function Dashboard() {
     if (!targetAddress) return;
     
     setIsAnalyzing(true);
+    setAnalysisError(null);
     try {
       const result = await analyzeWallet(targetAddress);
-      setScoreData(result);
-      setSuggestions(getSuggestions(result, {
-        totalInflow: 0,
-        totalOutflow: 0,
-        transactionCount: 0,
-        inflowCount: 0,
-        outflowCount: 0
-      }));
+      setAnalysis(result);
+      setSuggestions(getSuggestions(result.score, result.metrics));
     } catch (err) {
-      console.error("Analysis error:", err);
+      setAnalysisError(err instanceof Error ? err.message : "Analysis failed. Please try again.");
     } finally {
       setIsAnalyzing(false);
     }
@@ -74,7 +68,10 @@ export default function Dashboard() {
           {isConnecting ? "Connecting..." : "Connect Wallet"}
         </button>
         {error && (
-          <p style={{ color: "#ef4444", fontSize: 14 }}>{error}</p>
+          <div className="flex items-center gap-2 px-4 py-2 bg-red-500/10 rounded-lg">
+            <AlertTriangle size={16} style={{ color: "#ef4444" }} />
+            <p style={{ color: "#ef4444", fontSize: 14 }}>{error}</p>
+          </div>
         )}
         <p style={{ color: "var(--foreground-dim)", fontSize: 12 }}>
           Powered by Stellar
@@ -133,60 +130,88 @@ export default function Dashboard() {
           )}
         </motion.div>
 
-        {/* Score Display */}
-        {scoreData ? (
+        {/* Error State */}
+        {analysisError && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{ background: "#ef444420", border: "1px solid #ef4444" }}
+            className="rounded-2xl p-4 mb-6 flex items-center gap-3"
           >
-            {/* Score Circle */}
-            <div className="relative inline-block mb-6">
-              <svg width="240" height="240" viewBox="0 0 240 240">
-                <circle 
-                  cx="120" 
-                  cy="120" 
-                  r="100" 
-                  fill="none" 
-                  stroke="var(--border)" 
-                  strokeWidth="16" 
-                />
-                <circle 
-                  cx="120" 
-                  cy="120" 
-                  r="100" 
-                  fill="none" 
-                  stroke={scoreData.riskLevel === "Low" ? "#22c55e" : scoreData.riskLevel === "Medium" ? "#eab308" : "#ef4444"}
-                  strokeWidth="16"
-                  strokeLinecap="round"
-                  strokeDasharray={`${(scoreData.score / 100) * 628} 628`}
-                  transform="rotate(-90 120 120)"
-                  style={{ transition: "stroke-dasharray 1s ease" }}
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span style={{ color: "var(--foreground)", fontWeight: 900, fontSize: 64 }}>
-                  {scoreData.score}
+            <AlertTriangle size={18} style={{ color: "#ef4444" }} />
+            <p style={{ color: "#ef4444", fontSize: 14 }}>{analysisError}</p>
+            <button 
+              onClick={handleAnalyze}
+              style={{ marginLeft: "auto", color: "var(--primary)", fontSize: 13 }}
+              className="text-sm font-bold"
+            >
+              Try Again
+            </button>
+          </motion.div>
+        )}
+
+        {/* Loading State */}
+        {isAnalyzing && (
+          <div className="mb-8">
+            <ScoreSkeleton />
+          </div>
+        )}
+
+        {/* Results */}
+        {analysis && !isAnalyzing && (
+          <>
+            {/* Score Display */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center mb-8"
+            >
+              <div className="relative inline-block mb-6">
+                <svg width="240" height="240" viewBox="0 0 240 240">
+                  <circle cx="120" cy="120" r="100" fill="none" stroke="var(--border)" strokeWidth="16" />
+                  <circle 
+                    cx="120" cy="120" r="100" 
+                    fill="none" 
+                    stroke={analysis.score.riskLevel === "Low" ? "#22c55e" : analysis.score.riskLevel === "Medium" ? "#eab308" : "#ef4444"}
+                    strokeWidth="16"
+                    strokeLinecap="round"
+                    strokeDasharray={`${(analysis.score.score / 100) * 628} 628`}
+                    transform="rotate(-90 120 120)"
+                    style={{ transition: "stroke-dasharray 1s ease" }}
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span style={{ color: "var(--foreground)", fontWeight: 900, fontSize: 64 }}>
+                    {analysis.score.score}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center gap-3 mb-8">
+                <span 
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold"
+                  style={{ 
+                    background: analysis.score.riskLevel === "Low" ? "#22c55e20" : analysis.score.riskLevel === "Medium" ? "#eab30820" : "#ef444420",
+                    color: analysis.score.riskLevel === "Low" ? "#22c55e" : analysis.score.riskLevel === "Medium" ? "#eab308" : "#ef4444"
+                  }}
+                >
+                  <AlertCircle size={16} />
+                  {analysis.score.riskLevel} Risk
                 </span>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Risk Badge */}
-            <div className="flex items-center justify-center gap-3 mb-8">
-              <span 
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold"
-                style={{ 
-                  background: scoreData.riskLevel === "Low" ? "#22c55e20" : scoreData.riskLevel === "Medium" ? "#eab30820" : "#ef444420",
-                  color: scoreData.riskLevel === "Low" ? "#22c55e" : scoreData.riskLevel === "Medium" ? "#eab308" : "#ef4444"
-                }}
-              >
-                <AlertCircle size={16} />
-                {scoreData.riskLevel} Risk
-              </span>
-            </div>
+            {/* Flow Summary */}
+            <FlowSummary data={analysis.flowSummary} isLoading={isAnalyzing} className="mb-6" />
+
+            {/* Flow Chart */}
+            <FlowChart transactions={analysis.transactions} isLoading={isAnalyzing} className="mb-6" />
 
             {/* Score Breakdown */}
-            <div 
+            <motion.div
+              variants={item}
+              initial="hidden"
+              animate="show"
               style={{ background: "var(--card)", border: "1px solid var(--border)" }}
               className="rounded-2xl p-6 mb-6"
             >
@@ -195,9 +220,9 @@ export default function Dashboard() {
               </h3>
               <div className="grid grid-cols-3 gap-4">
                 {[
-                  { label: "Inflow Consistency", value: scoreData.factors.inflowConsistency },
-                  { label: "Outflow Stability", value: scoreData.factors.outflowStability },
-                  { label: "Transaction Frequency", value: scoreData.factors.transactionFrequency },
+                  { label: "Inflow Consistency", value: analysis.score.factors.inflowConsistency },
+                  { label: "Outflow Stability", value: analysis.score.factors.outflowStability },
+                  { label: "Transaction Frequency", value: analysis.score.factors.transactionFrequency },
                 ].map((factor, i) => (
                   <div key={i}>
                     <div className="flex items-center justify-between mb-2">
@@ -217,11 +242,17 @@ export default function Dashboard() {
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* Suggestions */}
             {suggestions.length > 0 && (
-              <div style={{ background: "var(--card)", border: "1px solid var(--border)" }} className="rounded-2xl p-6">
+              <motion.div
+                variants={item}
+                initial="hidden"
+                animate="show"
+                style={{ background: "var(--card)", border: "1px solid var(--border)" }} 
+                className="rounded-2xl p-6"
+              >
                 <h3 style={{ color: "var(--foreground)", fontWeight: 700, fontSize: 16 }} className="mb-4">
                   Insights
                 </h3>
@@ -232,10 +263,13 @@ export default function Dashboard() {
                     </p>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             )}
-          </motion.div>
-        ) : (
+          </>
+        )}
+
+        {/* Empty State */}
+        {!analysis && !isAnalyzing && (
           <div className="text-center py-12">
             <Layers size={48} style={{ color: "var(--primary)", margin: "0 auto 16px" }} />
             <h3 style={{ color: "var(--foreground)", fontWeight: 800, fontSize: 20 }} className="mb-2">
