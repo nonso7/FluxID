@@ -312,39 +312,27 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── CTA strip ── */}
-      <section
-        style={{ background: "var(--card)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}
-        className="py-20 px-5"
+      {/* ── Footer ── */}
+      <footer
+        style={{ background: "var(--card)", borderTop: "1px solid var(--border)" }}
+        className="py-12 px-5"
       >
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.55 }}
-          className="max-w-2xl mx-auto text-center"
-        >
+        <div className="max-w-2xl mx-auto text-center mb-8">
           <h2
             style={{ color: "var(--foreground)", letterSpacing: "-0.04em" }}
-            className="text-4xl font-black mb-4"
+            className="text-3xl font-black mb-3"
           >
             Start analyzing wallets today.
           </h2>
-          <p style={{ color: "var(--foreground-muted)" }} className="text-base mb-8">
+          <p style={{ color: "var(--foreground-muted)" }} className="text-base mb-6">
             Connect your Freighter wallet. Analyze any wallet. Understand financial behavior.
           </p>
           <Link href="/dashboard" className="btn btn-primary text-sm inline-flex items-center gap-2">
             <Zap size={14} /> Launch App
           </Link>
-        </motion.div>
-      </section>
-
-      {/* ── Footer ── */}
-      <footer
-        style={{ borderTop: "1px solid var(--border)" }}
-        className="py-8 px-5"
-      >
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+        </div>
+        
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 pt-6" style={{ borderTop: "1px solid var(--border)" }}>
           <div className="flex items-center gap-2">
             <Image src="/fluxID-logo.png" alt="FluxID" width={36} height={36} />
             <span style={{ fontSize: 20, fontWeight: 700, letterSpacing: "0.04em" }}>
