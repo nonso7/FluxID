@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { Providers } from "./providers";
 import { FreighterProvider } from "./context/FreighterContext";
+import { ToastProvider } from "./components/Toast";
 import ClientLayout from "@/components/ClientLayout";
 
 export const metadata: Metadata = {
@@ -40,11 +42,15 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="antialiased">
-        <FreighterProvider>
-          <ClientLayout>{children}</ClientLayout>
-        </FreighterProvider>
+        <Providers>
+          <FreighterProvider>
+            <ToastProvider>
+              <ClientLayout>{children}</ClientLayout>
+            </ToastProvider>
+          </FreighterProvider>
+        </Providers>
       </body>
     </html>
   );

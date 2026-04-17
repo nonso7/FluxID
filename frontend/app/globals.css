@@ -1,8 +1,7 @@
 @import "tailwindcss";
 
 /* ─── FluxID Design Tokens — Dark (default) ───────────────────── */
-:root,
-[data-theme="dark"] {
+:root {
   --background:      #090A06;
   --surface:         #121407;
   --card:            #181B0C;
@@ -24,7 +23,7 @@
 }
 
 /* ─── FluxID Design Tokens — Light ───────────────────────────── */
-[data-theme="light"] {
+.light {
   --background:      #F5F4EE;
   --surface:         #EDEBE0;
   --card:            #E8E5D8;

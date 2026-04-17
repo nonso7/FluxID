@@ -1,9 +1,11 @@
 'use client'
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { Layers, Zap, Cpu, ArrowRight, Wallet } from "lucide-react";
+import Onboarding from "./components/Onboarding";
 
 const FEATURES = [
   {
@@ -42,6 +44,20 @@ const item = {
 };
 
 export default function Home() {
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  useEffect(() => {
+    const hasSeenOnboarding = localStorage.getItem("fluxid_onboarding_seen");
+    if (!hasSeenOnboarding) {
+      setShowOnboarding(true);
+    }
+  }, []);
+
+  const handleCloseOnboarding = () => {
+    setShowOnboarding(false);
+    localStorage.setItem("fluxid_onboarding_seen", "true");
+  };
+
   return (
     <div className="min-h-screen overflow-x-hidden">
 
@@ -340,6 +356,8 @@ export default function Home() {
           </span>
         </div>
       </footer>
+
+      <Onboarding isOpen={showOnboarding} onClose={handleCloseOnboarding} />
     </div>
   );
 }

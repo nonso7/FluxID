@@ -17,7 +17,7 @@ Everything else supports that.
 
 **Category:** [UI]  
 **Status:** COMPLETED  
-**Priority:** Critical  
+**Priority:** Critical
 
 **Description:** Initialize Next.js app with FluxID branding focused on clarity and minimalism.
 
@@ -35,7 +35,7 @@ Everything else supports that.
 
 **Category:** [INTEGRATION]  
 **Status:** COMPLETED  
-**Priority:** Critical  
+**Priority:** Critical
 
 **Description:** Handle wallet connection globally.
 
@@ -55,7 +55,7 @@ Everything else supports that.
 
 **Category:** [UI/INTEGRATION]  
 **Status:** COMPLETED  
-**Priority:** High  
+**Priority:** High
 
 **Description:** Smooth wallet connection experience.
 
@@ -72,7 +72,7 @@ Everything else supports that.
 
 **Category:** [UI]  
 **Status:** COMPLETED  
-**Priority:** Critical  
+**Priority:** Critical
 
 **Description:** The main product moment — must be instantly clear.
 
@@ -91,7 +91,7 @@ Everything else supports that.
 
 **Category:** [UI]  
 **Status:** COMPLETED  
-**Priority:** High  
+**Priority:** High
 
 **Description:** Simple risk classification tied to score.
 
@@ -109,7 +109,7 @@ Everything else supports that.
 
 **Category:** [UI]  
 **Status:** COMPLETED  
-**Priority:** Medium  
+**Priority:** Medium
 
 **Description:** Simple visualization of money flow.
 
@@ -126,7 +126,7 @@ Everything else supports that.
 
 **Category:** [UI]  
 **Status:** COMPLETED  
-**Priority:** Medium  
+**Priority:** Medium
 
 **Description:** Lightweight supporting stats.
 
@@ -145,7 +145,7 @@ Everything else supports that.
 
 **Category:** [UI]  
 **Status:** COMPLETED  
-**Priority:** Medium  
+**Priority:** Medium
 
 **Description:** Provide simple behavioral insights.
 
@@ -163,7 +163,7 @@ Everything else supports that.
 
 **Category:** [ERROR]  
 **Status:** COMPLETED  
-**Priority:** Medium  
+**Priority:** Medium
 
 **Description:** Handle edge cases cleanly.
 
@@ -179,7 +179,7 @@ Everything else supports that.
 
 **Category:** [UX]  
 **Status:** COMPLETED  
-**Priority:** High  
+**Priority:** High
 
 **Description:** Smooth transitions during data fetch.
 
@@ -195,7 +195,7 @@ Everything else supports that.
 
 **Category:** [UI]  
 **Status:** COMPLETED  
-**Priority:** Medium  
+**Priority:** Medium
 
 **Description:** Ensure mobile-first usability.
 
@@ -204,6 +204,180 @@ Everything else supports that.
 - [x] Optimize for small screens
 - [x] Responsive grid layouts
 - [x] Test on mobile friendly components
+
+---
+
+## Phase 6: UI/UX Patterns
+
+## First-Time Experience
+
+### Issue #FE-11: Onboarding Product Tour
+
+**Category:** [UX PATTERN]  
+**Status:** COMPLETED  
+**Priority:** High
+
+**Description:** Guide first-time users with a simple walkthrough.
+
+**Tasks:**
+
+- [x] Create onboarding modal (first visit only)
+- [x] Multi-step product tour (2–4 steps max)
+- [x] Highlight:
+  - Score
+  - Risk level
+  - Flow chart
+- [x] CTA: "Got it" / "Start exploring"
+- [x] Store completion state (localStorage)
+
+---
+
+### Issue #FE-12: Navigation Pattern
+
+**Category:** [UX PATTERN]  
+**Status:** COMPLETED  
+**Priority:** Medium
+
+**Description:** Keep navigation simple and intuitive.
+
+**Tasks:**
+
+- [x] Top navigation bar with logo, tab navigation, and wallet controls
+- [x] Sidebar with icon + label navigation (island style)
+- [x] Main content area as island with content from clicked sidebar item
+- [x] Clear active state indicators
+
+---
+
+## Phase 6: UI States
+
+### Issue #FE-13: Loading States
+
+**Category:** [UI STATE]  
+**Status:** COMPLETED  
+**Priority:** High
+
+**Description:** Smooth transitions during data fetch.
+
+**Tasks:**
+
+- [x] Skeleton loader for score
+- [x] Loading indicator during analysis
+- [x] Prevent layout shift/flicker
+
+---
+
+### Issue #FE-14: Empty States
+
+**Category:** [UI STATE]  
+**Status:** COMPLETED  
+**Priority:** Medium
+
+**Description:** Guide users when no data exists.
+
+**Tasks:**
+
+- [x] “No transactions found” message
+- [x] Suggest next action (e.g., “Use active wallet”)
+
+---
+
+### Issue #FE-15: Error States
+
+**Category:** [UI STATE]  
+**Status:** COMPLETED  
+**Priority:** Medium
+
+**Description:** Handle failures gracefully.
+
+**Tasks:**
+
+- [x] Network error UI
+- [x] Retry button
+- [x] Wallet not connected state
+
+---
+
+### Issue #FE-16: Success & Feedback States
+
+**Category:** [UI STATE]  
+**Status:** COMPLETED  
+**Priority:** Medium
+
+**Description:** Provide feedback for user actions.
+
+**Tasks:**
+
+- [x] Toast notification for:
+  - Wallet connected
+  - Score loaded
+- [x] Subtle confirmation messages
+- [x] Non-intrusive alerts
+
+---
+
+## Phase 7: Motion & Micro-Interactions
+
+### Issue #FE-17: Motion Design
+
+**Category:** [MOTION]  
+**Status:** COMPLETED  
+**Priority:** Low
+
+**Description:** Improve perceived quality with subtle animations.
+
+**Tasks:**
+
+- [x] Smooth score animation (count-up effect)
+- [x] Fade-in for dashboard elements
+- [x] Hover states on cards
+- [x] Soft transitions between states
+
+---
+
+## Phase 8: Responsive Design
+
+### Issue #FE-18: Mobile Optimization
+
+**Category:** [UI]  
+**Status:** COMPLETED  
+**Priority:** Medium
+
+**Description:** Ensure mobile-first usability.
+
+**Tasks:**
+
+- [x] Optimize for small screens
+- [x] Responsive layouts
+- [x] Stack components vertically
+- [x] Ensure score remains primary focus
+
+---
+
+## Design System Reference (For Consistency)
+
+### UX Patterns
+
+- Onboarding Modal (Product Tour)
+- Navigation (Minimal / Single screen)
+
+### UI States
+
+- Loading (Skeleton, Spinner)
+- Empty (No data guidance)
+- Error (Retry flows)
+- Success (Toasts, confirmations)
+
+### Motion Design
+
+- Transitions
+- Micro-interactions
+- Score animation
+
+### Design Style
+
+- Minimalism (clean, uncluttered)
+- High contrast focus on score
 
 ---
 
@@ -216,8 +390,10 @@ Everything else supports that.
 ## Implementation Complete
 
 All frontend issues have been implemented:
+
 - Phase 1: Foundation (COMPLETE)
 - Phase 2: Core Experience (COMPLETE)
 - Phase 3: Supporting Insights (COMPLETE)
 - Phase 4: Suggestions (COMPLETE)
 - Phase 5: UX Polish (COMPLETE)
+- Phase 6: UI/UX Patterns (IN PROGRESS)

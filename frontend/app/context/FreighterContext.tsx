@@ -1,98 +1,179 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  type ReactNode,
+} from "react";
 
-interface FreighterContextType {
-  address: string | null;
+/* ── Freighter API v2 ─────────────────────────────────── */
+import {
+  isConnected as freighterIsConnected,
+  getPublicKey,
+  isAllowed,
+  setAllowed,
+} from "@stellar/freighter-api";
+
+/* ── Types ───────────────────────────────────────────── */
+interface FreighterState {
+  /** Whether Freighter extension is installed in the browser */
+  isInstalled: boolean;
+  /** Whether a wallet is currently connected */
   isConnected: boolean;
-  isConnecting: boolean;
+  /** The connected Stellar public key (G...) */
+  publicKey: string | null;
+  /** True while any async wallet operation is in progress */
+  isLoading: boolean;
+  /** Last error message, if any */
   error: string | null;
+}
+
+interface FreighterContextValue extends FreighterState {
+  /** Prompt the user to connect their Freighter wallet */
   connect: () => Promise<void>;
+  /** Disconnect (clear local state; Freighter has no revoke API) */
   disconnect: () => void;
 }
 
-const FreighterContext = createContext<FreighterContextType | undefined>(undefined);
+const initialState: FreighterState = {
+  isInstalled: false,
+  isConnected: false,
+  publicKey: null,
+  isLoading: true,
+  error: null,
+};
 
-export function FreighterProvider({ children }: { children: React.ReactNode }) {
-  const [address, setAddress] = useState<string | null>(null);
-  const [isConnecting, setIsConnecting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+/* ── Context ─────────────────────────────────────────── */
+const FreighterContext = createContext<FreighterContextValue | undefined>(
+  undefined
+);
 
-  const connect = useCallback(async () => {
-    setIsConnecting(true);
-    setError(null);
+/* ── Provider ────────────────────────────────────────── */
+export function FreighterProvider({ children }: { children: ReactNode }) {
+  const [state, setState] = useState<FreighterState>(initialState);
 
+  /**
+   * Check if Freighter is installed and whether it has previously
+   * been authorised for this dApp.  If so, silently reconnect.
+   */
+  const checkConnection = useCallback(async () => {
     try {
-      if (typeof window === "undefined") {
-        throw new Error("Window not available");
-      }
+      setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
-const freighter = await import("@stellar/freighter-api");
-       
-      const connected = (await freighter.isConnected()) as boolean;
-      
+      const connected = await freighterIsConnected();
+
       if (!connected) {
-        throw new Error("Freighter wallet not installed. Please install Freighter to continue.");
+        setState((prev) => ({
+          ...prev,
+          isInstalled: false,
+          isConnected: false,
+          publicKey: null,
+          isLoading: false,
+        }));
+        return;
       }
 
-      const result = await freighter.getPublicKey() as { publicKey?: string; error?: string };
-      const publicKey = result.publicKey;
-      const freighterError = result.error;
-      
-      if (freighterError) {
-        throw new Error(freighterError);
-      }
+      // Extension is installed
+      const allowed = await isAllowed();
 
-      if (publicKey) {
-        setAddress(publicKey);
-        localStorage.setItem("fluxid_wallet_address", publicKey);
+      if (allowed) {
+        // Auto-reconnect: user previously granted access
+        const pubKey = await getPublicKey();
+        setState({
+          isInstalled: true,
+          isConnected: true,
+          publicKey: pubKey,
+          isLoading: false,
+          error: null,
+        });
+      } else {
+        setState({
+          isInstalled: true,
+          isConnected: false,
+          publicKey: null,
+          isLoading: false,
+          error: null,
+        });
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to connect wallet";
-      setError(message);
-      console.error("Wallet connection error:", err);
-    } finally {
-      setIsConnecting(false);
+      setState((prev) => ({
+        ...prev,
+        isLoading: false,
+        error: err instanceof Error ? err.message : "Unknown error",
+      }));
+    }
+  }, []);
+
+  /** Run on mount – handles auto-reconnect on refresh */
+  useEffect(() => {
+    checkConnection();
+  }, [checkConnection]);
+
+  /* ── Actions ───────────────────────────────────────── */
+  const connect = useCallback(async () => {
+    try {
+      setState((prev) => ({ ...prev, isLoading: true, error: null }));
+
+      const connected = await freighterIsConnected();
+      if (!connected) {
+        setState((prev) => ({
+          ...prev,
+          isInstalled: false,
+          isLoading: false,
+          error: "Freighter extension not found. Please install it.",
+        }));
+        return;
+      }
+
+      await setAllowed();
+      const pubKey = await getPublicKey();
+
+      setState({
+        isInstalled: true,
+        isConnected: true,
+        publicKey: pubKey,
+        isLoading: false,
+        error: null,
+      });
+    } catch (err) {
+      setState((prev) => ({
+        ...prev,
+        isLoading: false,
+        error: err instanceof Error ? err.message : "Failed to connect",
+      }));
     }
   }, []);
 
   const disconnect = useCallback(() => {
-    setAddress(null);
-    localStorage.removeItem("fluxid_wallet_address");
-    setError(null);
-  }, []);
-
-  useEffect(() => {
-    const storedAddress = localStorage.getItem("fluxid_wallet_address");
-    if (storedAddress) {
-      setAddress(storedAddress);
-    }
+    setState({
+      isInstalled: true,
+      isConnected: false,
+      publicKey: null,
+      isLoading: false,
+      error: null,
+    });
   }, []);
 
   return (
-    <FreighterContext.Provider
-      value={{
-        address,
-        isConnected: !!address,
-        isConnecting,
-        error,
-        connect,
-        disconnect,
-      }}
-    >
+    <FreighterContext.Provider value={{ ...state, connect, disconnect }}>
       {children}
     </FreighterContext.Provider>
   );
 }
 
-export function useFreighter() {
+/* ── Hook ────────────────────────────────────────────── */
+export function useFreighter(): FreighterContextValue {
   const context = useContext(FreighterContext);
   if (context === undefined) {
-    throw new Error("useFreighter must be used within a FreighterProvider");
+    throw new Error("useFreighter must be used within a <FreighterProvider>");
   }
   return context;
 }
 
+/* ── Helper ─────────────────────────────────────────── */
 export function truncateAddress(address: string, start = 6, end = 4): string {
   if (!address || address.length <= start + end) return address;
   return `${address.slice(0, start)}...${address.slice(-end)}`;

@@ -1,6 +1,8 @@
 import Server from "@stellar/stellar-sdk";
+import { FLUXID_CONFIG } from "./constants";
 
 const HORIZON_URL = process.env.NEXT_PUBLIC_HORIZON_URL || "https://horizon-testnet.stellar.org";
+const AI_BACKEND_URL = process.env.NEXT_PUBLIC_AI_BACKEND_URL || "https://api.fluxid.stellarvhibes.org";
 
 export interface LiquidityMetrics {
   totalInflow: number;
@@ -212,4 +214,55 @@ export function getSuggestions(score: LiquidityScore, metrics: LiquidityMetrics)
   }
   
   return suggestions.slice(0, 2);
+}
+
+export async function fetchFromBackend(address: string): Promise<WalletAnalysis> {
+  try {
+    const response = await fetch(`${AI_BACKEND_URL}/score/${address}`);
+    const data = await response.json();
+    
+    if (data.success) {
+      return {
+        score: data.data.score,
+        metrics: data.data.metrics,
+        transactions: data.data.transactions || [],
+        flowSummary: data.data.flowSummary
+      };
+    }
+    
+    throw new Error(data.error || "Backend returned error");
+  } catch (error) {
+    console.error("Backend fetch failed, falling back to local:", error);
+    return analyzeWallet(address);
+  }
+}
+
+export async function getContractScore(walletAddress: string): Promise<{ score: number; risk: string } | null> {
+  try {
+    const server = new Server(HORIZON_URL);
+    
+    const contractId = FLUXID_CONFIG.CONTRACT_ID;
+    if (!contractId) {
+      console.log("No contract ID configured");
+      return null;
+    }
+    
+    const result = await server.getContractData(
+      contractId,
+      walletAddress,
+      "scVal"
+    );
+    
+    if (result) {
+      return {
+        score: parseInt(result.value?.u32 || "0"),
+        risk: "Low"
+      };
+    }
+    
+    return null;
+  } catch (error) {
+    console.error("Error fetching from contract:", error);
+    return null;
+  }
 }
