@@ -4,13 +4,14 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, useAnimation } from "framer-motion";
-import { 
-  LayoutDashboard, 
-  BarChart3, 
-  Settings, 
-  Wallet, 
+import {
+  LayoutDashboard,
+  BarChart3,
+  Settings,
+  Wallet,
   Shield,
   Activity,
+  Bot,
   ChevronLeft,
   ChevronRight,
   Home
@@ -18,6 +19,7 @@ import {
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard/agent", label: "Agent Demo", icon: Bot },
   { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/dashboard/wallet", label: "Wallet", icon: Wallet },
   { href: "/dashboard/security", label: "Security", icon: Shield },

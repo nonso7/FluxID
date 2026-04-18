@@ -359,39 +359,43 @@ Everything else supports that.
 ### Issue #FE-19: Payment Flow UI (402 Simulation)
 
 **Category:** [UI/AI]  
-**Status:** PENDING  
+**Status:** COMPLETED  
 **Priority:** High
 
 **Description:** Visualize agent payment flow for demo clarity.
 
 **Tasks:**
 
-- [ ] Show "Payment Required" state when score is locked
-- [ ] Display:
-  - Amount required
-  - Wallet address
-- [ ] Simulate "Processing payment..."
-- [ ] Transition to "Access Granted"
+- [x] Show "Payment Required" state with locked score placeholder
+- [x] Display amount, payment wallet address, and memo (copyable)
+- [x] "Signing..." and "Processing payment..." states during Freighter approval + Horizon submit
+- [x] Transition to "Access Granted" with animated score reveal
+
+**Evidence:** `frontend/app/components/AgentDemo.tsx`, `frontend/lib/agentDemo.ts`, route `/dashboard/agent`. Uses a real HTTP 402 response from the backend's `/paid/score/:accountId` endpoint and a real Freighter-signed Stellar payment.
 
 ---
 
-### Issue #FE-20: Agent Activity Panel (Optional but 🔥)
+### Issue #FE-20: Agent Activity Panel
 
 **Category:** [UI/AI]  
-**Status:** PENDING  
+**Status:** COMPLETED  
 **Priority:** Medium
 
 **Description:** Show what the AI agent is doing in real time.
 
 **Tasks:**
 
-- [ ] Activity log UI:
+- [x] Activity log UI with six steps:
   - "Requesting score..."
-  - "Payment required..."
-  - "Sending payment..."
-  - "Retrying request..."
+  - "Payment required"
+  - "Signing payment with Freighter"
+  - "Submitting payment to Stellar"
+  - "Retrying request after payment"
   - "Score received"
-- [ ] Auto-play sequence for demo
+- [x] Step status (pending / active / done / error) with live icons and detail lines
+- [x] Auto-advances as the real X402 flow progresses (no simulation)
+
+**Evidence:** `frontend/app/components/ActivityLog.tsx`, consumed by `AgentDemo`.
 
 ---
 
@@ -432,9 +436,13 @@ Everything else supports that.
 
 All frontend issues have been implemented:
 
-- Phase 1: Foundation (COMPLETE)
-- Phase 2: Core Experience (COMPLETE)
-- Phase 3: Supporting Insights (COMPLETE)
-- Phase 4: Suggestions (COMPLETE)
-- Phase 5: UX Polish (COMPLETE)
-- Phase 6: UI/UX Patterns (IN PROGRESS)
+- Phase 1: Foundation (COMPLETE) — FE-1, FE-2
+- Phase 2: Core Experience (COMPLETE) — FE-3, FE-4, FE-5
+- Phase 3: Supporting Insights (COMPLETE) — FE-6, FE-7
+- Phase 4: Suggestions (COMPLETE) — FE-8
+- Phase 5: UX Polish (COMPLETE) — FE-9, FE-10, FE-11
+- Phase 6: UI/UX Patterns (COMPLETE) — FE-11, FE-12
+- Phase 6: UI States (COMPLETE) — FE-13, FE-14, FE-15, FE-16
+- Phase 7: Motion & Micro-Interactions (COMPLETE) — FE-17
+- Phase 8: Responsive Design (COMPLETE) — FE-18
+- Phase 9: Agent Payment Visualization (COMPLETE) — FE-19, FE-20
