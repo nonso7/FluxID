@@ -15,11 +15,25 @@ export interface HorizonPayment {
 
 export interface HorizonTransaction {
   id: string;
+  hash?: string;
   source_account: string;
   created_at: string;
   operation_count: number;
   fee_charged: number;
   successful: boolean;
+  memo?: string;
+  memo_type?: string;
+}
+
+export interface HorizonOperation {
+  id: string;
+  type: string;
+  transaction_hash: string;
+  from?: string;
+  to?: string;
+  amount?: string;
+  asset_type?: string;
+  created_at: string;
 }
 
 export interface PaymentData {

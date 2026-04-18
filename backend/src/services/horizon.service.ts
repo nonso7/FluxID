@@ -1,6 +1,6 @@
 import type { NetworkType } from '../config/stellar.config.js';
 import { getStellarConfig } from '../config/stellar.config.js';
-import type { HorizonPayment, HorizonTransaction, PaymentData } from '../types/stellar.types.js';
+import type { HorizonPayment, HorizonTransaction, HorizonOperation, PaymentData } from '../types/stellar.types.js';
 import { logger } from '../utils/logger.js';
 import { appConfig } from '../config/app.config.js';
 
@@ -83,6 +83,18 @@ export class HorizonService {
     } catch (error) {
       logger.error({ error, accountId }, 'Failed to fetch transactions');
       throw error;
+    }
+  }
+
+  async getTransactionOperations(txHash: string): Promise<HorizonOperation[]> {
+    const url = `${this.horizonUrl}/transactions/${txHash}/operations?limit=50`;
+
+    try {
+      const data = await this.fetchWithRetry<{ _embedded: { records: HorizonOperation[] } }>(url);
+      return data._embedded?.records || [];
+    } catch (error) {
+      logger.error({ error, txHash }, 'Failed to fetch transaction operations');
+      return [];
     }
   }
 

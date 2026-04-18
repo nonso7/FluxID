@@ -8,4 +8,9 @@ export const appConfig = {
   stellarNetwork: (process.env.STELLAR_NETWORK || 'testnet') as 'mainnet' | 'testnet',
   cacheTtlSeconds: parseInt(process.env.CACHE_TTL_SECONDS || '60', 10),
   horizonTimeout: parseInt(process.env.HORIZON_TIMEOUT || '30000', 10),
+  payment: {
+    receiveAddress: process.env.PAYMENT_RECEIVE_ADDRESS || '',
+    amountXLM: parseFloat(process.env.PAYMENT_AMOUNT_XLM || '0.5'),
+    requestTtlSeconds: parseInt(process.env.PAYMENT_REQUEST_TTL_SECONDS || '900', 10),
+  },
 };

@@ -4,6 +4,8 @@ import { appConfig } from './config/app.config.js';
 import { healthRoute } from './routes/health.routes.js';
 import { registerScoreRoutes } from './routes/score.routes.js';
 import { registerPaymentRoutes } from './routes/contract.routes.js';
+import { registerPaidRoutes } from './routes/paid.routes.js';
+import { registerMcpRoutes } from './routes/mcp.routes.js';
 import { logger } from './utils/logger.js';
 
 export async function buildServer() {
@@ -18,6 +20,8 @@ export async function buildServer() {
   fastify.get('/health', healthRoute);
   await registerScoreRoutes(fastify);
   await registerPaymentRoutes(fastify);
+  await registerPaidRoutes(fastify);
+  await registerMcpRoutes(fastify);
 
   fastify.setErrorHandler((error, _request, reply) => {
     logger.error({ error }, 'Unhandled error');
