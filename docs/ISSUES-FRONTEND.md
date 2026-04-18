@@ -354,6 +354,47 @@ Everything else supports that.
 
 ---
 
+## Phase 9: Agent Payment Visualization (Demo Booster)
+
+### Issue #FE-19: Payment Flow UI (402 Simulation)
+
+**Category:** [UI/AI]  
+**Status:** PENDING  
+**Priority:** High
+
+**Description:** Visualize agent payment flow for demo clarity.
+
+**Tasks:**
+
+- [ ] Show "Payment Required" state when score is locked
+- [ ] Display:
+  - Amount required
+  - Wallet address
+- [ ] Simulate "Processing payment..."
+- [ ] Transition to "Access Granted"
+
+---
+
+### Issue #FE-20: Agent Activity Panel (Optional but 🔥)
+
+**Category:** [UI/AI]  
+**Status:** PENDING  
+**Priority:** Medium
+
+**Description:** Show what the AI agent is doing in real time.
+
+**Tasks:**
+
+- [ ] Activity log UI:
+  - "Requesting score..."
+  - "Payment required..."
+  - "Sending payment..."
+  - "Retrying request..."
+  - "Score received"
+- [ ] Auto-play sequence for demo
+
+---
+
 ## Design System Reference (For Consistency)
 
 ### UX Patterns
@@ -396,12 +437,4 @@ All frontend issues have been implemented:
 - Phase 3: Supporting Insights (COMPLETE)
 - Phase 4: Suggestions (COMPLETE)
 - Phase 5: UX Polish (COMPLETE)
-- Phase 6: UI/UX Patterns (COMPLETE)
-- Phase 7: Motion & Micro-Interactions (COMPLETE)
-- Phase 8: Responsive Design (COMPLETE)
-
-Additional hardening during this pass:
-
-- Fixed broken `@stellar/stellar-sdk` import in `lib/scoring.ts` (now `Horizon.Server`)
-- Switched transaction-history fetch to the dedicated `/payments` endpoint for accurate inflow/outflow classification
-- Wired `analyzeWallet` to call the backend `/score/:accountId` first when `NEXT_PUBLIC_AI_BACKEND_URL` is set, with local scoring as a fallback
+- Phase 6: UI/UX Patterns (IN PROGRESS)

@@ -34,19 +34,18 @@ Keep contracts minimal, fast, and demo-ready.
 ### Issue #SC-2: Liquidity Score Storage
 
 **Priority:** Critical  
-**Status:** COMPLETED
+**Status:** PENDING
 
 **Description:** Store and retrieve liquidity scores for wallet addresses.
 
 **Tasks:**
 
-- [x] Define `DataKey` enum:
+- [ ] Define `DataKey` enum:
   - `Score(Address)`
   - `LastUpdated(Address)`
-  - `RiskLevel(Address)`
-- [x] Implement `set_score(env, admin: Address, wallet: Address, score: u32, risk: RiskLevel)`
-- [x] Implement `get_score(env, wallet: Address) -> u32`
-- [x] Implement `get_last_updated(env, wallet: Address) -> Option<u64>`
+- [ ] Implement `set_score(env, wallet: Address, score: u32)`
+- [ ] Implement `get_score(env, wallet: Address) -> u32`
+- [ ] Implement `get_last_updated(env, wallet: Address)`
 
 **Notes:**
 
@@ -58,23 +57,22 @@ Keep contracts minimal, fast, and demo-ready.
 ### Issue #SC-3: Risk Level Mapping (Optional On-Chain)
 
 **Priority:** Medium  
-**Status:** COMPLETED
+**Status:** PENDING
 
 **Description:** Map score to risk level (optional for MVP).
 
 **Tasks:**
 
-- [x] Define `RiskLevel` enum:
+- [ ] Define `RiskLevel` enum:
   - `Low`
   - `Medium`
   - `High`
-- [x] Store risk alongside score (`RiskLevel(Address)` key)
-- [x] Expose `get_risk(env, wallet: Address) -> Option<RiskLevel>`
+- [ ] Implement `get_risk(score: u32) -> RiskLevel`
 
 **Notes:**
 
-- Risk is computed off-chain (backend) and stored on-chain for flexibility
-- Frontend/backend remain authoritative for computation
+- Prefer computing risk on frontend/backend for flexibility
+- Only include on-chain if needed for demo
 
 ---
 
@@ -83,20 +81,20 @@ Keep contracts minimal, fast, and demo-ready.
 ### Issue #SC-4: Score Update Authorization
 
 **Priority:** High  
-**Status:** COMPLETED
+**Status:** PENDING
 
 **Description:** Restrict who can update scores.
 
 **Tasks:**
 
-- [x] Define `Admin` address (stored in instance storage via `init`)
-- [x] Restrict `set_score` to admin using `require_auth` + stored-admin check
-- [x] `transfer_admin` for future rotation
+- [ ] Define `Admin` address
+- [ ] Restrict `set_score` to admin/oracle
+- [ ] Implement basic auth using Soroban auth framework
 
 **Notes:**
 
-- Single admin model (MVP)
-- No complex roles
+- Keep simple (single admin is enough for MVP)
+- No complex roles needed
 
 ---
 
@@ -105,23 +103,69 @@ Keep contracts minimal, fast, and demo-ready.
 ### Issue #SC-5: Public Query Interface
 
 **Priority:** High  
-**Status:** COMPLETED
+**Status:** PENDING
 
 **Description:** Allow external apps to query scores.
 
 **Tasks:**
 
-- [x] Expose `get_score(wallet)`
-- [x] Expose `get_risk(wallet)`
-- [x] Expose `get_wallet_info(wallet)` (score + risk + last_updated)
-- [x] Expose `get_last_updated(wallet)`
-- [x] Expose `get_all_wallets_with_scores(wallets)` for batch queries
-- [x] Read functions use persistent storage and are read-optimized
+- [ ] Expose:
+  - `get_score(wallet)`
+  - `get_risk(wallet)` (optional)
+- [ ] Ensure functions are read-optimized
 
 **Notes:**
 
-- Supports the “decision layer” positioning
+- This supports your “decision layer” positioning
 - Critical for demo narrative
+
+---
+
+---
+
+## Phase 3.5: Off-Chain → On-Chain Sync (Agent Flow Support)
+
+### Issue #SC-7: Backend Score Sync Hook
+
+**Priority:** Medium  
+**Status:** PENDING
+
+**Description:** Allow backend (after payment + scoring) to persist results on-chain.
+
+**Tasks:**
+
+- [ ] Ensure `set_score(wallet, score)` is callable by backend
+- [ ] Backend signs transaction using admin/oracle key
+- [ ] Trigger contract write AFTER:
+  - score is computed
+  - payment is verified
+- [ ] Store `LastUpdated` timestamp
+
+**Flow:**
+
+Agent → Backend (pays) → Backend computes score → Backend writes to contract
+
+---
+
+### Issue #SC-8: Read Consistency (Fallback Source)
+
+**Priority:** Low  
+**Status:** PENDING
+
+**Description:** Allow frontend or external apps to read score directly if needed.
+
+**Tasks:**
+
+- [ ] Ensure `get_score(wallet)` is stable and fast
+- [ ] Return default if no score exists
+- [ ] Optional: include `last_updated` in response
+
+**Notes:**
+
+- Contract acts as:
+  > "verifiable source of truth"
+- Backend remains:
+  > "real-time computation engine"
 
 ---
 
@@ -130,21 +174,16 @@ Keep contracts minimal, fast, and demo-ready.
 ### Issue #SC-6: Contract Testing
 
 **Priority:** High  
-**Status:** COMPLETED
+**Status:** PENDING
 
 **Description:** Ensure contract reliability.
 
 **Tasks:**
 
-- [x] Test score storage and retrieval
-- [x] Test unauthorized access rejection (admin-only `set_score`)
-- [x] Test edge cases (no score returns 0, missing risk returns None)
-- [x] Test multiple wallet entries
-- [x] Test `transfer_admin`
-- [x] Test `last_updated` timestamp recording
-- [x] Test `get_wallet_info` happy + nonexistent paths
-
-10/10 tests pass (`cargo test`).
+- [ ] Test score storage and retrieval
+- [ ] Test unauthorized access rejection
+- [ ] Test edge cases (no score, zero score)
+- [ ] Test multiple wallet entries
 
 ---
 
@@ -228,14 +267,3 @@ During demo:
 - Contract interaction does not fail
 
 That’s enough to prove the concept.
-
----
-
-## Implementation Complete
-
-All smart contract issues have been implemented and tested:
-
-- Phase 1: MVP Contract (COMPLETE) — SC-1, SC-2, SC-3
-- Phase 2: Access Control (COMPLETE) — SC-4
-- Phase 3: Integration Layer (COMPLETE) — SC-5
-- Phase 4: Testing (COMPLETE) — SC-6 (10/10 tests passing)

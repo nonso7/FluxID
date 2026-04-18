@@ -16,46 +16,46 @@ Everything else supports that.
 ### Issue #BK-1: Transaction Data Fetching
 
 **Category:** [DATA]  
-**Status:** COMPLETED  
+**Status:** PENDING  
 **Priority:** Critical
 
 **Description:** Fetch wallet transaction data from Stellar.
 
 **Tasks:**
 
-- [x] Setup Node.js service (Fastify — lightweight)
-- [x] Connect to Horizon API (testnet + mainnet)
-- [x] Fetch recent payments for a wallet (with retry + timeout)
-- [x] Extract payment operations only (filter native + credit_alphanum)
-- [x] Classify:
+- [ ] Setup Node.js service (lightweight)
+- [ ] Connect to Horizon API
+- [ ] Fetch recent transactions for a wallet
+- [ ] Extract payment operations only
+- [ ] Classify:
   - Inflow (incoming funds)
   - Outflow (outgoing funds)
 
 **Notes:**
 
-- Implemented in `src/services/horizon.service.ts`
-- Only payment operations used — ingestion stays lean
+- Do NOT overbuild ingestion pipeline
+- Only fetch what is needed for scoring
 
 ---
 
 ### Issue #BK-2: In-Memory Processing (No Heavy DB)
 
 **Category:** [INFRA]  
-**Status:** COMPLETED  
+**Status:** PENDING  
 **Priority:** Critical
 
 **Description:** Process transactions without heavy infrastructure.
 
 **Tasks:**
 
-- [x] Process transactions in-memory (no DB dependency)
-- [x] Normalize data (amount, timestamp, type)
-- [x] Lightweight in-memory TTL cache (`src/services/cache.service.ts`)
+- [ ] Process transactions in-memory
+- [ ] Normalize data (amount, timestamp, type)
+- [ ] Optional: lightweight caching (Redis or in-app)
 
 **Notes:**
 
-- Speed > persistence for MVP
-- Cache TTL configurable via `CACHE_TTL_SECONDS`
+- Avoid full database setup for MVP
+- Speed > persistence for demo
 
 ---
 
@@ -64,48 +64,47 @@ Everything else supports that.
 ### Issue #BK-3: Rule-Based Liquidity Score
 
 **Category:** [AI]  
-**Status:** COMPLETED  
+**Status:** PENDING  
 **Priority:** Critical
 
 **Description:** Compute wallet trust score (0–100).
 
 **Tasks:**
 
-- [x] Inflow consistency (coefficient-of-variation on inter-arrival times)
-- [x] Outflow stability (coefficient-of-variation on amounts)
-- [x] Transaction frequency (normalized activity level)
-- [x] Flow stability (inflow/outflow ratio)
-- [x] Counterparty diversity
-- [x] Volume component
-- [x] Weighted combination into final score (0–100)
+- [ ] Inflow consistency:
+  - Detect regular income patterns
+- [ ] Outflow stability:
+  - Detect erratic vs controlled spending
+- [ ] Transaction frequency:
+  - Measure activity level
+- [ ] Combine into final score (0–100)
 
 **Output:**
 
 - `score: number`
-- `metrics: ScoreMetrics` (all sub-scores exposed for transparency)
 
 **Notes:**
 
-- Implemented in `src/services/scoring.service.ts`
-- Pure functions, deterministic, no ML
+- Keep logic simple and explainable
+- No ML for MVP
 
 ---
 
 ### Issue #BK-4: Risk Classification
 
 **Category:** [AI]  
-**Status:** COMPLETED  
+**Status:** PENDING  
 **Priority:** High
 
 **Description:** Convert score into simple risk level.
 
 **Tasks:**
 
-- [x] Thresholds:
-  - Low: >= 70
-  - Medium: 40 – 69
+- [ ] Define thresholds:
+  - Low: > 70
+  - Medium: 40 – 70
   - High: < 40
-- [x] Generate short explanation string (driven by sub-scores)
+- [ ] Generate short explanation string
 
 **Output:**
 
@@ -119,41 +118,32 @@ Everything else supports that.
 ### Issue #BK-5: Core Score Endpoint
 
 **Category:** [API]  
-**Status:** COMPLETED  
+**Status:** PENDING  
 **Priority:** Critical
 
 **Description:** Serve score to frontend.
 
 **Tasks:**
 
-- [x] Fastify server setup (`src/app.ts`)
-- [x] `GET /score/:accountId?network=&refresh=&sync=`
-- [x] Response format:
+- [ ] Setup Express or Fastify server
+- [ ] Endpoint: `GET /score/{wallet}`
+- [ ] Response format:
 
 ```json
 {
-  "success": true,
-  "data": {
-    "accountId": "G...",
-    "score": 82,
-    "risk": "Low",
-    "insight": "Consistent inflow patterns, stable spending behavior",
-    "suggestion": "Consider saving a portion of incoming funds",
-    "metrics": { "...": "..." },
-    "lastUpdated": "2026-04-17T...",
-    "cached": false
-  }
+  "score": 82,
+  "risk": "Low",
+  "insight": "Consistent inflow and stable spending",
+  "suggestion": "Consider saving a portion of incoming funds"
 }
 ```
 
-- [x] TTL-based caching
-- [x] Input validation (Stellar key format + network)
-- [x] Supporting endpoints: `/payments/:accountId`, `/transactions/:accountId`, `/health`
+Add basic caching (optional)
 
 **Notes:**
 
 - This endpoint powers the entire demo
-- 400 on malformed address, 404 on missing account, 503 on Horizon failure
+- Must be fast and reliable
 
 ---
 
@@ -162,22 +152,21 @@ Everything else supports that.
 ### Issue #BK-6: Recommendation Logic
 
 **Category:** [AI]  
-**Status:** COMPLETED  
+**Status:** PENDING  
 **Priority:** Medium
 
 **Description:** Generate simple behavioral suggestions.
 
 **Tasks:**
 
-- [x] Rule-based suggestion system (`generateInsightAndSuggestion`)
-- [x] Limit to 1 primary suggestion per wallet
-- [x] Simple, human language
+- [ ] Rule-based suggestion system
+- [ ] Limit to 1–2 suggestions per wallet
+- [ ] Keep language simple and human
 
 **Examples:**
 
-- "Try to establish more consistent income sources"
-- "Consider stabilizing your outflows for better financial health"
-- "Consider saving a portion of incoming funds"
+- "Your spending is inconsistent — try stabilizing outflows."
+- "You receive funds regularly — consider saving a fixed portion."
 
 ---
 
@@ -186,24 +175,125 @@ Everything else supports that.
 ### Issue #BK-7: Smart Contract Sync
 
 **Category:** [INTEGRATION]  
-**Status:** COMPLETED  
+**Status:** PENDING  
 **Priority:** Medium
 
 **Description:** Push computed score to Soroban contract.
 
 **Tasks:**
 
-- [x] `ContractService.syncScore(wallet, score, risk)` — real Soroban RPC call
-- [x] Calls `set_score(admin, wallet, score, risk)` on deployed contract
-- [x] Confirms transaction status (polls until SUCCESS/FAIL)
-- [x] Graceful no-op when `ADMIN_SECRET_KEY` or `CONTRACT_ID` unset
-- [x] Exposed via `POST /score/:accountId/sync` and `GET /score/:accountId?sync=true`
-- [x] Handle failures gracefully (returns structured `ContractSyncResult` with error)
+- [ ] Call set_score(wallet, score)
+- [ ] Sync backend → on-chain storage
+- [ ] Handle failures gracefully
 
 **Notes:**
 
-- Implemented in `src/services/contract.service.ts`
-- Requires `TESTNET_CONTRACT_ID` / `MAINNET_CONTRACT_ID` + `ADMIN_SECRET_KEY`
+- Not required for demo
+- Only implement if time permits
+
+---
+
+---
+
+# 🔥 2. BACKEND & AI ISSUES — ADD NEW PHASE
+
+📍 **Add AFTER Phase 5 (Optional Integration)**
+
+```md
+---
+
+## Phase 6: Agentic AI Payments (X402 Integration)
+
+### Issue #BK-8: 402 Payment Middleware
+
+**Category:** [AI / PAYMENTS]  
+**Status:** PENDING  
+**Priority:** High  
+
+**Description:** Enable pay-per-request API access using Stellar payments.
+
+**Tasks:**
+
+- [ ] Intercept protected endpoints (e.g. `/score/{wallet}`)
+- [ ] Return HTTP 402 if payment not detected
+- [ ] Include:
+  - payment address
+  - required amount
+- [ ] Store pending payment requests
+
+---
+
+### Issue #BK-9: Payment Verification (Stellar)
+
+**Category:** [BLOCKCHAIN]  
+**Status:** PENDING  
+**Priority:** Critical
+
+**Description:** Verify incoming payments on-chain.
+
+**Tasks:**
+
+- [ ] Listen for incoming transactions (Horizon)
+- [ ] Match payment:
+  - wallet
+  - amount
+  - memo/reference
+- [ ] Mark request as paid
+- [ ] Allow access after verification
+
+---
+
+### Issue #BK-10: Agent Retry Flow
+
+**Category:** [AI]  
+**Status:** PENDING  
+**Priority:** High
+
+**Description:** Enable seamless retry after payment.
+
+**Tasks:**
+
+- [ ] Store request state temporarily
+- [ ] Allow re-request without re-triggering 402
+- [ ] Return cached result after payment
+
+---
+
+### Issue #BK-11: Paid Endpoint Wrapper
+
+**Category:** [API]  
+**Status:** PENDING  
+**Priority:** High
+
+**Description:** Wrap scoring endpoint with payment requirement.
+
+**Tasks:**
+
+- [ ] Protect `/score/{wallet}`
+- [ ] Only return result if:
+  - payment verified OR
+  - request is free-tier (optional)
+- [ ] Return structured response for agents
+
+---
+
+### Issue #BK-12: MCP / Agent Compatibility (Optional Boost)
+
+**Category:** [AI]  
+**Status:** PENDING  
+**Priority:** Medium
+
+**Description:** Make FluxID usable by AI agents via MCP.
+
+**Tasks:**
+
+- [ ] Define tool schema:
+  - `analyze_wallet(wallet_address)`
+- [ ] Return structured JSON
+- [ ] Ensure compatibility with:
+  - Claude
+  - Gemini
+  - ChatGPT agents
 
 ---
 
@@ -268,15 +358,4 @@ During demo:
 - Score is returned correctly
 - Insight is understandable
 - No API failures
-
----
-
-## Implementation Complete
-
-All backend issues have been implemented:
-
-- Phase 1: Data Ingestion (COMPLETE) — BK-1, BK-2
-- Phase 2: Scoring Engine (COMPLETE) — BK-3, BK-4
-- Phase 3: API Layer (COMPLETE) — BK-5
-- Phase 4: Suggestions Engine (COMPLETE) — BK-6
-- Phase 5: Optional Integration (COMPLETE) — BK-7
+```

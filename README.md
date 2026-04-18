@@ -33,9 +33,9 @@ It answers one simple question:
 
 Instead of guessing, platforms can:
 
-- Query a wallet’s behavior  
-- Get a simple trust score  
-- Make decisions instantly  
+- Query a wallet’s behavior
+- Get a simple trust score
+- Make decisions instantly
 
 ---
 
@@ -47,16 +47,16 @@ They track what you have, but not how you behave financially.
 
 Because of this:
 
-- Freelancers struggle to prove financial reliability  
-- Payments get delayed due to lack of trust  
-- Cross-border transactions come with uncertainty  
-- Credit systems are slow, fragmented, or unavailable  
+- Freelancers struggle to prove financial reliability
+- Payments get delayed due to lack of trust
+- Cross-border transactions come with uncertainty
+- Credit systems are slow, fragmented, or unavailable
 
 Even in Web3:
 
-- Wallets are anonymous  
-- Reputation is fragmented  
-- There’s no standard trust layer  
+- Wallets are anonymous
+- Reputation is fragmented
+- There’s no standard trust layer
 
 So trust becomes guesswork.
 
@@ -68,18 +68,49 @@ FluxID introduces a **Liquidity Identity** — a dynamic score that reflects how
 
 It analyzes:
 
-- Income consistency  
-- Spending patterns  
-- Transaction frequency  
-- Flow stability  
+- Income consistency
+- Spending patterns
+- Transaction frequency
+- Flow stability
 
 And produces:
 
-- A **Liquidity Score (0–100)**  
-- A simple **risk signal (Low / Medium / High)**  
-- A clear view of financial behavior  
+- A **Liquidity Score (0–100)**
+- A simple **risk signal (Low / Medium / High)**
+- A clear view of financial behavior
 
 ---
+
+## Agentic AI Integration (X402 Payments)
+
+FluxID is not just a scoring system — it is designed to work with **AI agents that can pay and act autonomously**.
+
+### The Problem
+
+AI agents today can:
+
+- Analyze data
+- Make decisions
+
+But they **cannot natively pay for APIs or financial intelligence**.
+
+---
+
+### The Solution: X402 + Stellar Payments
+
+FluxID integrates an **X402-style payment flow**, enabling agents to:
+
+1. Request wallet analysis
+2. Receive a payment requirement (HTTP 402)
+3. Pay using Stellar (USDC/XLM)
+4. Retry automatically
+5. Get the liquidity score instantly
+
+---
+
+### How It Works
+
+1. Agent calls:
 
 ## Real Use Cases
 
@@ -87,8 +118,8 @@ FluxID is built as infrastructure — other platforms can plug into it and use i
 
 ### Lending Platforms
 
-- Score = 82 → Approve loan  
-- Score = 34 → Reduce or reject  
+- Score = 82 → Approve loan
+- Score = 34 → Reduce or reject
 
 No paperwork. Just behavior.
 
@@ -96,7 +127,7 @@ No paperwork. Just behavior.
 
 ### Freelance / Job Platforms
 
-- Consistent inflow + stable spending → Reliable worker  
+- Consistent inflow + stable spending → Reliable worker
 
 Enables better terms, faster payouts, and more trust.
 
@@ -104,7 +135,7 @@ Enables better terms, faster payouts, and more trust.
 
 ### Remittance Apps
 
-- Detect poor saving behavior → Suggest better allocation  
+- Detect poor saving behavior → Suggest better allocation
 
 Leads to smarter money usage and structured financial decisions.
 
@@ -112,7 +143,7 @@ Leads to smarter money usage and structured financial decisions.
 
 ### Marketplaces / Payment Platforms
 
-- Trusted users → Allow pay-later or flexible terms  
+- Trusted users → Allow pay-later or flexible terms
 
 Unlocks new financial models.
 
@@ -136,9 +167,9 @@ FluxID is designed as a general-purpose trust layer, but the MVP focuses on a cl
 
 Why:
 
-- Heavy reliance on cross-border payments  
-- No formal credit systems  
-- Trust directly impacts income and payment speed  
+- Heavy reliance on cross-border payments
+- No formal credit systems
+- Trust directly impacts income and payment speed
 
 ---
 
@@ -146,81 +177,88 @@ Why:
 
 ### Core Features
 
-- Wallet connection (Freighter / Stellar wallet)  
-- Fetch transaction history (Stellar SDK / Horizon)  
+- Wallet connection (Freighter / Stellar wallet)
+- Fetch transaction history (Stellar SDK / Horizon)
 
 - Rule-based Liquidity Score:
-  - Inflow consistency  
-  - Outflow volatility  
-  - Transaction frequency  
+  - Inflow consistency
+  - Outflow volatility
+  - Transaction frequency
 
 - Simple dashboard:
-  - Large, clear score display  
-  - Flow summary  
-  - Risk indicator (Low / Medium / High)  
+  - Large, clear score display
+  - Flow summary
+  - Risk indicator (Low / Medium / High)
 
-- Lightweight suggestion system  
-  - Example: “Consider preserving part of incoming funds”  
+- Lightweight suggestion system
+  - Example: “Consider preserving part of incoming funds”
 
 ---
 
 ### UI/UX Focus
 
-- Clean and minimal  
-- Score-first (visible immediately)  
-- Understandable in under 3 seconds  
-- Mobile-first  
+- Clean and minimal
+- Score-first (visible immediately)
+- Understandable in under 3 seconds
+- Mobile-first
 
 ---
 
 ### What We Keep Simple
 
-- Rule-based logic (no heavy ML for MVP)  
-- Basic predictions (clear, not overpromised)  
-- No complex integrations  
+- Rule-based logic (no heavy ML for MVP)
+- Basic predictions (clear, not overpromised)
+- No complex integrations
 
 ---
 
 ## Demo Flow
 
-1. User connects wallet  
-2. Transaction history is fetched  
-3. Liquidity score is calculated  
+1. User connects wallet
+2. Transaction history is fetched
+3. Liquidity score is calculated
 4. Dashboard displays:
-   - Score  
-   - Risk level  
-   - Flow insight  
-5. User sees a simple suggestion  
+   - Score
+   - Risk level
+   - Flow insight
+5. User sees a simple suggestion
 
 ---
 
 ## Tech Stack
 
 ### Blockchain
-- Stellar SDK (JavaScript)  
-- Soroban (minimal usage for extensibility)  
+
+- Stellar SDK (JavaScript)
+- Soroban (minimal usage for extensibility)
 
 ### Data / Logic
-- Rule-based scoring engine (Node.js)  
+
+- Rule-based scoring engine (Node.js)
 
 ### Frontend
-- Next.js (mobile-first PWA)  
-- TypeScript  
-- Tailwind CSS  
+
+- Next.js (mobile-first PWA)
+- TypeScript
+- Tailwind CSS
 
 ### Wallet
-- Freighter Wallet  
+
+- Freighter Wallet
 
 ---
 
 ## Project Structure
+
 ---
+
 FluxID/
-├── smartcontract/     # Soroban smart contracts
-├── frontend/          # Next.js PWA frontend
-├── docs/             # Development guides & issue trackers
-└── README.md         # This file
-```
+├── smartcontract/ # Soroban smart contracts
+├── frontend/ # Next.js PWA frontend
+├── docs/ # Development guides & issue trackers
+└── README.md # This file
+
+````
 
 ---
 
@@ -236,9 +274,10 @@ FluxID/
 cd frontend
 npm install
 npm run dev
-```
+````
 
 ### Setup Smart Contracts
+
 ```bash
 cd smartcontract
 cargo build
@@ -262,4 +301,4 @@ A real-time, behavior-based trust layer for Web3.
 
 ---
 
-*Project maintained by @bbkenny and @xqcxx*
+_Project maintained by @bbkenny and @xqcxx_
