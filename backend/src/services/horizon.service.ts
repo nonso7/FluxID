@@ -55,10 +55,18 @@ export class HorizonService {
       const data = await this.fetchWithRetry<{ _embedded: { records: HorizonPayment[] } }>(url);
       const records = data._embedded?.records || [];
 
+      // Exclude self-swaps: path_payment_strict_* operations where the wallet is
+      // both source and destination represent an internal asset conversion (XLM → USDC
+      // etc.), not a real inflow or outflow. Counting them inflates inflow/outflow
+      // counts and distorts every sub-score that feeds the liquidity rating.
+      const isSelfSwap = (p: HorizonPayment) =>
+        p.from === accountId && p.to === accountId;
+
       return records
-        .filter((p): p is HorizonPayment & { asset_type: string } => 
+        .filter((p): p is HorizonPayment & { asset_type: string } =>
           p.asset_type === 'native' || p.asset_type === 'credit_alphanum4' || p.asset_type === 'credit_alphanum12'
         )
+        .filter((p) => !isSelfSwap(p))
         .map((payment) => ({
           id: payment.id,
           from: payment.from,

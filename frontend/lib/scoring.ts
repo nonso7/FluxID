@@ -117,7 +117,11 @@ export async function fetchWalletPayments(
       .order("desc")
       .call();
 
-    return response.records as unknown as PaymentRecord[];
+    // Exclude self-swaps: path_payment_strict_* ops where the wallet is both source
+    // and destination are internal asset conversions (XLM → USDC etc.), not real
+    // inflows or outflows. Keeping them would inflate counts and skew every sub-score.
+    const records = response.records as unknown as PaymentRecord[];
+    return records.filter((p) => !(p.from === address && p.to === address));
   } catch (error) {
     // 404s are expected when a wallet exists on one network but not another —
     // return empty instead of throwing, caller handles the empty-state UX.
