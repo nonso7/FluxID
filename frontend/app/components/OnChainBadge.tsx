@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ShieldCheck, CircleDashed, AlertCircle } from "lucide-react";
+import { ShieldCheck, CircleDashed } from "lucide-react";
 import { fetchOnChainInfo, formatLastUpdated, type OnChainWalletInfo } from "../../lib/onchain";
 
 interface Props {
@@ -85,14 +85,5 @@ export default function OnChainBadge({ wallet, className = "" }: Props) {
     );
   }
 
-  return (
-    <div
-      className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs ${className}`}
-      style={{ background: "#ef444420", border: "1px solid #ef4444", color: "#ef4444" }}
-      title={state.message}
-    >
-      <AlertCircle size={12} />
-      On-chain check failed
-    </div>
-  );
+  return null;
 }
