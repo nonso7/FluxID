@@ -1,6 +1,9 @@
 import type { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify';
 import { createHorizonService } from '../services/horizon.service.js';
 import { validateAccountId, validateNetwork } from '../utils/validators.js';
+import { appConfig } from '../config/app.config.js';
+
+const DEFAULT_NETWORK = appConfig.stellarNetwork;
 
 interface PaymentParams {
   accountId: string;
@@ -22,7 +25,7 @@ interface TransactionQuery {
 
 export async function paymentsRoute(request: FastifyRequest<{ Params: PaymentParams; Querystring: PaymentQuery }>, reply: FastifyReply) {
   const { accountId } = request.params;
-  const { network = 'testnet', limit = '200' } = request.query;
+  const { network = DEFAULT_NETWORK, limit = '200' } = request.query;
 
   try {
     const validatedAccountId = validateAccountId(accountId);
@@ -58,7 +61,7 @@ export async function paymentsRoute(request: FastifyRequest<{ Params: PaymentPar
 
 export async function transactionsRoute(request: FastifyRequest<{ Params: TransactionParams; Querystring: TransactionQuery }>, reply: FastifyReply) {
   const { accountId } = request.params;
-  const { network = 'testnet', limit = '200' } = request.query;
+  const { network = DEFAULT_NETWORK, limit = '200' } = request.query;
 
   try {
     const validatedAccountId = validateAccountId(accountId);

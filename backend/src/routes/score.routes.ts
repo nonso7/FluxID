@@ -7,6 +7,9 @@ import { appendScoreHistory, getScoreHistory } from '../services/history.service
 import { generateExplanation } from '../services/explainability/index.js';
 import { validateAccountId, validateNetwork } from '../utils/validators.js';
 import { logger } from '../utils/logger.js';
+import { appConfig } from '../config/app.config.js';
+
+const DEFAULT_NETWORK = appConfig.stellarNetwork;
 
 interface ScoreParams {
   accountId: string;
@@ -24,7 +27,7 @@ interface SyncBody {
 
 export async function scoreRoute(request: FastifyRequest<{ Params: ScoreParams; Querystring: ScoreQuery }>, reply: FastifyReply) {
   const { accountId } = request.params;
-  const { network = 'testnet', refresh = 'false', sync = 'false' } = request.query;
+  const { network = DEFAULT_NETWORK, refresh = 'false', sync = 'false' } = request.query;
 
   try {
     const validatedAccountId = validateAccountId(accountId);
@@ -118,7 +121,7 @@ export async function syncScoreRoute(
   reply: FastifyReply
 ) {
   const { accountId } = request.params;
-  const { network = 'testnet' } = request.body || {};
+  const { network = DEFAULT_NETWORK } = request.body || {};
 
   try {
     const validatedAccountId = validateAccountId(accountId);
@@ -174,7 +177,7 @@ export async function scoreHistoryRoute(
   reply: FastifyReply
 ) {
   const { accountId } = request.params;
-  const { limit = '100', network = 'testnet', since } = request.query;
+  const { limit = '100', network = DEFAULT_NETWORK, since } = request.query;
 
   try {
     const validatedAccountId = validateAccountId(accountId);

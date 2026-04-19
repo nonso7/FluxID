@@ -2,6 +2,9 @@ import type { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify';
 import { createContractService } from '../services/contract.service.js';
 import { validateAccountId, validateNetwork } from '../utils/validators.js';
 import { logger } from '../utils/logger.js';
+import { appConfig } from '../config/app.config.js';
+
+const DEFAULT_NETWORK = appConfig.stellarNetwork;
 
 interface OnChainParams {
   wallet: string;
@@ -24,7 +27,7 @@ export async function onChainScoreRoute(
   reply: FastifyReply
 ) {
   const { wallet } = request.params;
-  const { network = 'testnet' } = request.query;
+  const { network = DEFAULT_NETWORK } = request.query;
 
   try {
     const validatedWallet = validateAccountId(wallet);
@@ -57,7 +60,7 @@ export async function onChainBatchRoute(
   request: FastifyRequest<{ Body: BatchBody }>,
   reply: FastifyReply
 ) {
-  const { wallets, network = 'testnet', mode = 'per-wallet' } = request.body || {};
+  const { wallets, network = DEFAULT_NETWORK, mode = 'per-wallet' } = request.body || {};
 
   if (!Array.isArray(wallets) || wallets.length === 0) {
     return reply.code(400).send({

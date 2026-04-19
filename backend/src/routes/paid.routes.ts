@@ -9,6 +9,9 @@ import { generateExplanation } from '../services/explainability/index.js';
 import { validateAccountId, validateNetwork } from '../utils/validators.js';
 import { logger } from '../utils/logger.js';
 import type { PaymentChallenge } from '../types/payment.types.js';
+import { appConfig } from '../config/app.config.js';
+
+const DEFAULT_NETWORK = appConfig.stellarNetwork;
 
 interface PaidScoreParams {
   accountId: string;
@@ -45,7 +48,7 @@ export async function paidScoreRoute(
   reply: FastifyReply
 ) {
   const { accountId } = request.params;
-  const { network = 'testnet', requestId, sync = 'false' } = request.query;
+  const { network = DEFAULT_NETWORK, requestId, sync = 'false' } = request.query;
 
   try {
     const validatedAccountId = validateAccountId(accountId);
