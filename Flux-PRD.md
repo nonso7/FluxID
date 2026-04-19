@@ -349,8 +349,6 @@ Clean, fast, demo-ready.
 
 ## Demo Flow
 
-## Demo Flow
-
 ### Mode 1: Analyze Any Wallet (Primary)
 
 1. User enters wallet address
@@ -373,99 +371,235 @@ Clean, fast, demo-ready.
 
 ---
 
-## Post-Grant Vision
+## Post-MVP Roadmap
 
-Once funded, FluxID evolves into a full **Liquidity Identity Infrastructure Layer**.
+### Overview
 
----
+After the MVP phase, FluxID evolves beyond single-wallet analysis into a broader intelligence layer designed for platforms, not just individual users.
 
-### 1. On-Chain Liquidity Identity (Core Primitive)
+In the MVP, FluxID answers:
 
-- Non-transferable identity token (Soroban-based)
-- Represents a wallet's financial behavior over time
-- Continuously updated using on-chain transaction data
-- Becomes a portable, verifiable financial identity across applications
+> “Can this wallet be trusted?”
 
----
+Post-MVP, FluxID expands to answer:
 
-### 2. Advanced Liquidity Intelligence Engine
+> “What is the financial health of an entire user base, and how is it changing over time?”
 
-- Move from rule-based logic to real predictive models
-- Analyze:
-  - Cash flow patterns
-  - Income stability
-  - Spending volatility
+This shift moves FluxID from:
 
-- Forecast:
-  - Liquidity stress
-  - Default probability
-  - Short-term financial gaps
+- A scoring tool for individual wallets
 
-Transforms FluxID into a real-time risk engine, not just a scoring tool.
+To:
+
+- A **protocol-level risk intelligence system** that platforms can rely on for decision-making
+
+This is where FluxID begins to transition into real infrastructure.
 
 ---
 
-### 3. Programmable Trust & Integration Layer
+## Protocol Intelligence Layer
 
-FluxID becomes infrastructure other apps can build on.
+The Protocol Intelligence Layer enables platforms to analyze groups of wallets collectively, using liquidity scores as the foundation.
 
-- Public query endpoints / smart contract interfaces:
-  - `/score/{wallet}`
-  - `/risk/{wallet}`
+Instead of looking at isolated scores, platforms gain visibility into patterns, trends, and risks across their entire ecosystem.
 
-Enables:
-
-- Lending protocols to assess borrowers
-- Payroll systems to verify reliability
-- Remittance apps (like IntentRemit) to optimize fund allocation
-
-Example:
-
-- "Only unlock funds if score > threshold"
-- "Adjust lending terms dynamically based on behavior"
+This unlocks a new level of insight that is not possible with raw transaction data alone.
 
 ---
 
-### 4. Cross-Platform Reputation Aggregation
+### 1. User-Base Health Dashboard
 
-- Extend beyond single-wallet analysis
-- Combine:
-  - On-chain behavior
-  - Optional off-chain signals (future phase)
+This feature provides platforms with a clear, high-level view of the financial quality of their users.
 
-Creates a unified financial identity across ecosystems.
+Instead of manually inspecting individual wallets, platforms can instantly understand the overall health of their ecosystem.
+
+#### Features
+
+- Average liquidity score across all users
+- Distribution of users across risk levels (Low / Medium / High)
+- Percentage of high-risk wallets
+- Score trends over time (daily, weekly, monthly)
+- Risk concentration indicators
+
+#### Example Insight
+
+> “Your borrower cohort’s average score dropped from 78 to 64 over the past month.”
+
+#### Value
+
+- Enables portfolio-level risk visibility
+- Helps detect gradual deterioration in user quality
+- Supports better lending, payment, and onboarding decisions
+- Provides a simple, actionable summary for non-technical stakeholders
 
 ---
 
-### 5. Smart Financial Automation Layer
+### 2. Cohort & Segmentation Engine
 
-- Auto-trigger actions based on liquidity behavior:
-  - Auto-lock funds
-  - Auto-suggest savings allocations
-  - Integrate directly into remittance flows
+This layer allows platforms to filter and group wallets based on behavior, score, and activity patterns.
 
-Example:
+Instead of treating all users equally, platforms can identify and act on specific segments.
 
-- "Based on your pattern, 30% of incoming funds will be automatically preserved"
+#### Capabilities
+
+- Query wallets using multiple conditions:
+  - Score thresholds (e.g., score > 75)
+  - Inflow levels (e.g., monthly inflow > $500)
+  - Transaction frequency
+  - Interaction with specific contracts or applications
+
+#### Example Queries
+
+- “Show wallets with score > 75 and consistent monthly inflow”
+- “List users who interacted with contract X and have medium risk”
+- “Find high-activity wallets with improving score trends”
+
+#### Use Cases
+
+- Identifying high-quality users for premium offerings
+- Creating lending or credit approval lists
+- Segmenting users for risk-based pricing
+- Targeting users for onboarding or retention campaigns
+
+#### Value
+
+- Converts raw wallet data into structured, actionable insights
+- Enables smarter business decisions at scale
+- Bridges the gap between blockchain data and real-world operations
 
 ---
 
-### 6. Privacy & Selective Disclosure (Future)
+### 3. Risk Heatmaps
 
-- Privacy-preserving identity sharing (ZK layer later)
-- Users control:
-  - What data is visible
-  - What score components are shared
+Risk Heatmaps provide a visual understanding of where financial risk is concentrated across a network.
+
+Instead of isolated scores, platforms can see relationships and clusters of risky behavior.
+
+#### Features
+
+- Identification of high-risk wallet clusters
+- Detection of risky counterparties
+- Visualization of transaction relationships between wallets
+- Highlighting of risk-heavy interaction zones
+
+#### Example Insight
+
+> “High-risk activity is concentrated among wallets interacting with contract X.”
+
+#### Use Cases
+
+- Fraud detection and prevention
+- Identifying suspicious transaction networks
+- Monitoring ecosystem-level risk exposure
+- Evaluating the impact of specific integrations or partners
+
+#### Value
+
+- Enables network-level risk awareness
+- Helps platforms proactively manage threats
+- Provides deeper insight beyond individual wallet analysis
+
+---
+
+### 4. Early Warning System
+
+The Early Warning System continuously monitors wallet behavior and detects significant changes in risk patterns.
+
+Rather than reacting after problems occur, platforms are alerted in real time.
+
+#### Triggers
+
+- Sudden drop in average user scores
+- Increase in percentage of high-risk wallets
+- Abnormal transaction behavior patterns
+- Rapid changes in inflow/outflow stability
+
+#### Example Alert
+
+> “12% of your users dropped below a score of 50 within the last 24 hours.”
+
+#### Value
+
+- Enables proactive risk management
+- Helps detect potential defaults, fraud, or system stress early
+- Supports automated responses and intervention strategies
+- Reduces financial exposure for platforms
+
+---
+
+### 5. AI Agent Integration (Advanced Layer)
+
+FluxID becomes accessible not only to human users but also to autonomous systems.
+
+This allows AI agents and backend services to directly interact with FluxID for decision-making.
+
+#### Capabilities
+
+- API-based wallet score queries
+- Automated evaluation of financial reliability
+- Integration into decision pipelines (e.g., approvals, risk checks)
+- Optional payment-gated access (X402) for per-request usage
+
+#### Use Cases
+
+- Autonomous lending agents evaluating borrowers
+- Payment systems routing transactions based on risk
+- Smart contracts making conditional decisions
+- Backend systems automating credit checks
+
+#### Value
+
+- Extends FluxID into machine-to-machine ecosystems
+- Enables real-time, automated financial decisions
+- Positions FluxID as a foundational data layer for intelligent systems
+
+---
+
+## Strategic Positioning
+
+With the Protocol Intelligence Layer, FluxID evolves into:
+
+> A programmable trust layer for financial systems
+
+It is no longer just:
+
+- A dashboard
+- A scoring tool
+
+It becomes:
+
+- An intelligence infrastructure that powers decisions across platforms
+
+---
+
+## Implementation Note
+
+This roadmap is intentionally post-MVP.
+
+The current focus remains:
+
+- Single-wallet scoring
+- Clear and explainable insights
+- Reliable and deterministic output
+- A clean, intuitive dashboard experience
+
+The Protocol Intelligence Layer builds on top of a stable and trusted core system.
 
 ---
 
 ## Long-Term Vision
 
-FluxID becomes:
+As these capabilities mature, FluxID becomes:
 
 - A **credit layer for Web3**
-- A **risk engine for global finance**
-- A **trust infrastructure for emerging markets**
+- A **risk intelligence API for platforms**
+- A **decision engine for both humans and autonomous systems**
+
+It enables a future where:
+
+- Financial trust is measurable in real time
+- Platforms can act instantly on reliable signals
+- Wallet behavior becomes a universal standard for financial identity
 
 ---
 
