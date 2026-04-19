@@ -35,12 +35,14 @@ A comprehensive guide to FluxID's architecture, request flow, and team responsib
 FluxID must be able to score **ANY wallet address** without requiring ownership.
 
 This enables:
+
 - Lending platforms to evaluate borrowers
 - Marketplaces to assess buyers
 - Remittance apps to analyze recipients
 - AI agents to query wallet trust
 
 Wallet connection is only used for:
+
 - Convenience (auto-fill)
 - Future identity features
 
@@ -51,13 +53,15 @@ Wallet connection is only used for:
 ## Main Demo Flow
 
 ### Step 1: User Enters Wallet Address (Frontend)
-- **Trigger**: User pastes or types a Stellar wallet address
-- **Frontend**: Input field + "Analyze Wallet" button
-- **Result**: `walletAddress = "GABC123...XYZ"`
+
+- User pastes or types a Stellar wallet address
+- Clicks **Analyze Wallet**
+- Result: `walletAddress = "GABC123...XYZ"`
 
 ### Optional: User Connects Wallet (Convenience Only)
+
 - User connects Freighter wallet
-- Address is auto-filled into input field
+- Address is auto-filled
 - No authorization required
 
 > Wallet connection is NOT required for scoring
@@ -67,21 +71,41 @@ Wallet connection is only used for:
 ### Step 2: Frontend Calls Backend
 
 ```http
-GET /score/GABC123XYZ
+GET /score/{wallet}
 ```
 
 ### Step 3: Backend Fetches Transactions
-- Backend → Stellar Horizon
-- `GET https://horizon.stellar.org/accounts/{wallet}/payments`
 
-**Extracts:**
+Fetch from Stellar Horizon:
+
+```
+GET https://horizon.stellar.org/accounts/{wallet}/payments
+```
+
+**Extract:**
+
 - Amount
+- Asset type (XLM, USDC, tokens)
 - Direction (inflow/outflow)
 - Timestamp
 
 ---
 
-### Step 4: Backend Runs Scoring Engine
+### Step 4: Data Normalization
+
+- Convert all assets to a common unit (USD equivalent)
+- Normalize amounts across tokens (XLM, USDC, etc.)
+- Classify:
+  - Inflow vs Outflow
+  - External vs Internal transfers
+
+> Ensures consistent and fair scoring across all wallets
+
+**Note:** Use price feeds or static conversion for MVP
+
+---
+
+### Step 5: Backend Runs Scoring Engine
 
 **Input:**
 ```json
@@ -89,19 +113,28 @@ GET /score/GABC123XYZ
 ```
 
 **Processing:**
+
 - Inflow consistency → Are payments regular?
 - Outflow stability → Is spending controlled?
 - Frequency → Is wallet active?
 
 ---
 
-### Step 5 (OPTIONAL): Backend Writes to Smart Contract
-- Backend → Soroban Contract: `set_score(wallet, score)`
-- **Purpose**: Demonstrate on-chain capability
+### Step 6 (Optional): Write to Smart Contract
+
+Call Soroban contract:
+```
+set_score(wallet, score)
+```
+
+**Purpose:**
+
+- Demonstrate on-chain capability
+- Not required for core logic
 
 ---
 
-### Step 6: Backend Responds to Frontend
+### Step 7: Backend Responds
 
 ```json
 {
@@ -125,14 +158,32 @@ GET /score/GABC123XYZ
 
 ---
 
-### Step 7: Frontend Renders UI
-- Big Score (Primary focus)
-- Risk Badge (color-coded)
-- Top Risk Factors (short, scannable)
-- Score Breakdown (visual bars or chart)
-- Transaction Flow Graph (inflow vs outflow)
-- Insight (1-line explanation)
+### Step 8: Frontend Renders UI
+
+- Large score (primary focus)
+- Risk badge (color-coded)
+- Key factors (short and clear)
+- Score breakdown (bars or chart)
+- Flow visualization (inflow vs outflow)
+- Insight (1 sentence)
 - Suggestions (1–2 actions)
+
+---
+
+### Edge Case Handling
+
+If wallet has insufficient data:
+
+```json
+{
+  "score": 10,
+  "risk": "High",
+  "insight": "Insufficient transaction history to assess reliability",
+  "suggestions": [
+    "Use wallet more consistently to build a reliable score"
+  ]
+}
+```
 
 ---
 
@@ -145,7 +196,7 @@ GET /score/GABC123XYZ
 
 ### Secondary (User Mode)
 ```
-[ Connect Wallet ] → [ Auto-fill address ] → [ Analyze ]
+[ Connect Wallet ] → [ Auto-fill ] → [ Analyze ]
 ```
 
 ---
@@ -153,7 +204,7 @@ GET /score/GABC123XYZ
 ## Team Responsibilities
 
 ### Frontend
-- Accept wallet address input
+- Accept wallet input
 - Call `/score/{wallet}`
 - Display:
   - Score
@@ -161,10 +212,12 @@ GET /score/GABC123XYZ
   - Breakdown
   - Factors
   - Suggestions
-- No heavy logic
+
+> No business logic
 
 ### Backend
-- Fetch transactions (Horizon)
+- Fetch transactions
+- Normalize data
 - Compute score
 - Generate explanations
 - Return structured response
@@ -175,36 +228,44 @@ GET /score/GABC123XYZ
 - Store score
 - Return score
 
-> This is the credibility layer, not core logic
+> Credibility layer only
 
 ---
 
 ## AI Architecture
 
-### Layer 1 — CORE (Rule-Based)
+### Layer 1 — Core (Rule-Based)
 
-Must stay:
+Must be:
+
 - Deterministic
 - Fast
 - Explainable
 
 Handles:
+
 - Score (0–100)
-- Risk level (Low / Medium / High)
+- Risk (Low / Medium / High)
 - Breakdown (inflow, outflow, frequency)
 
-> Must produce consistent output for the same wallet
+> Same wallet must always return the same result
 
 ---
 
-### Layer 2 — AI Augmentation (Optional)
+### Layer 2 — AI Augmentation
 
-AI models handle:
-- Insight rewriting (natural language)
-- Risk explanation clarity
+Handles:
+
+- Insight wording
+- Explanation clarity
 - Suggestion phrasing
 
-> AI does NOT compute the score
+Constraints:
+
+- Must NOT change:
+  - Score
+  - Risk
+  - Breakdown
 
 ---
 
@@ -224,7 +285,6 @@ AI models handle:
     "High spending volatility"
   ],
   "insight": "This wallet shows inconsistent income and unstable spending behavior.",
-  "ai_insight": "Spending spikes following irregular deposits indicate weak financial stability.",
   "suggestions": [
     "Maintain more consistent inflow",
     "Reduce large irregular withdrawals"
@@ -236,20 +296,21 @@ AI models handle:
 
 ## Final Rules
 
-1. Primary interaction = Enter wallet address → Analyze
-2. Wallet connection is optional (auto-fill only)
-3. Backend uses rule-based scoring (no AI for logic)
+1. Primary flow = Enter wallet → Analyze
+2. Wallet connection is optional
+3. Backend owns all scoring logic
 4. Output must include:
    - Score
    - Risk
    - Breakdown
    - Factors
    - Suggestions
-5. Frontend must answer instantly:
+5. UI must answer instantly:
    - What is the score?
-   - Why is it that score?
+   - Why?
    - What should I do?
-6. X402 and AI agents are future-facing — NOT required for MVP
+6. System must be deterministic
+7. No overengineering for MVP
 
 ---
 
@@ -257,27 +318,34 @@ AI models handle:
 
 | Mistake | Problem |
 |---------|---------|
-| Putting scoring logic in contract | Slows development |
-| Frontend calculating score | Breaks architecture |
+| Scoring in smart contract | Slows development |
+| Frontend computing logic | Breaks architecture |
 | Overbuilding API | Only one endpoint needed |
 
 ---
 
-## Best Options
+## AI Implementation Options
 
-### 🟢 Fast + Reliable
-Use LLMs (e.g. OpenAI / Claude) for:
-- Insight rewriting
+### Fast (Recommended)
+
+- OpenAI
+- Claude
+
+**Use for:**
+
+- Insight generation
 - Explanation clarity
 - Suggestions
 
-### 🟡 Open Source Alternative
+### Open Source (Optional)
+
 - `mistralai/Mistral-7B-Instruct`
 - `meta-llama/Llama-3-8B-Instruct`
 
-> Heavier setup — not ideal for hackathon
+> Heavier setup — not needed for MVP
 
-### 🔴 Not Recommended
+### Not Recommended
+
 - Custom ML scoring models
 - Deep learning pipelines
 
@@ -285,19 +353,35 @@ Use LLMs (e.g. OpenAI / Claude) for:
 
 ## Future: Agentic Access (X402)
 
-FluxID can support AI agents that query wallet scores autonomously.
+FluxID can support AI agents querying wallet scores.
 
-Possible extensions:
-- Payment-gated API access (X402)
+**Future possibilities:**
+
+- Payment-gated API (X402)
 - Autonomous decision systems
 
-> NOT required for MVP  
-> Do NOT block development for this
+> Not required for MVP  
+> Do not block development
 
 ---
 
+## Summary
+
+FluxID flow:
+
+```
+Wallet → Transactions → Normalization → Scoring → Explanation → Decision
+```
+
+This document defines the source of truth for how FluxID works.
+
+---
+
+## Final Reality Check
+
 This version is now:
 
-✅ Fully aligned with your **address-first architecture**  
-✅ Matches your **AI explanation upgrade**  
-✅ Clean for **team execution + demo + judging**
+- Clear enough for **your frontend guy to build without asking questions**
+- Structured enough for **backend to not guess logic**
+- Simple enough for **demo clarity**
+- Strong enough for **judges / reviewers**
