@@ -3,9 +3,9 @@
 This document tracks the development tasks for FluxID Soroban smart contracts.
 
 Core Principle:
-Smart contracts are NOT the product.
+Smart contracts are not the primary computation layer.
 
-They support one core function:
+They serve as a verifiable, on-chain source of truth for wallet trust scores.
 
 > Store and expose a wallet's trust score.
 
@@ -187,21 +187,26 @@ Contract acts as the "verifiable source of truth"; backend remains the "real-tim
 ## Post-Grant Expansion (Future — OmniFlow Level)
 
 ### 1. On-Chain Liquidity Identity Token
+
 - Non-transferable identity token
 - Represents wallet reliability over time
 - Continuously updated based on behavior
 
 ### 2. Advanced On-Chain Risk Logic
+
 - Deeper on-chain computation
 - Verifiable on-chain scoring components
 
 ### 3. Multi-Oracle System
+
 - Multiple trusted sources updating scores
 
 ### 4. Cross-Platform Identity Layer
+
 - Extend identity beyond single wallet
 
 ### 5. Privacy Layer (ZK Future)
+
 - Selective disclosure of score components
 
 ---

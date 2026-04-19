@@ -122,6 +122,18 @@ This ensures:
 
 ---
 
+## Why On-Chain Storage Matters
+
+While scoring is computed off-chain for speed and flexibility, storing results on-chain provides:
+
+- Verifiability → Scores can be independently checked
+- Portability → Any app can read the same trust signal
+- Transparency → No hidden or mutable backend logic
+
+This makes the smart contract the **source of truth**, while the backend remains the **computation engine**.
+
+---
+
 ## Agentic AI Integration (X402 Payments)
 
 FluxID is designed for AI agents that can pay and act autonomously.
@@ -354,11 +366,13 @@ Platforms can monitor overall user quality.
 Query wallets based on behavior.
 
 **Examples:**
+
 - Score > threshold
 - Monthly inflow > threshold
 - Interaction with contracts
 
 **Used for:**
+
 - Lead generation
 - Risk filtering
 - User targeting
@@ -384,6 +398,7 @@ Detect sudden changes in risk.
 - Behavioral anomalies
 
 **Example:**
+
 > "12% of users dropped below score 50 in 24 hours"
 
 ---
@@ -391,6 +406,7 @@ Detect sudden changes in risk.
 ### 5. AI Agent Layer
 
 Enable autonomous systems to:
+
 - Query scores
 - Make decisions
 - Pay per request (X402)
@@ -409,9 +425,9 @@ A real-time, behavior-based trust layer for financial systems.
 
 ## Naming
 
-| Type | Name |
-|------|------|
-| Product | FluxID |
+| Type    | Name                     |
+| ------- | ------------------------ |
+| Product | FluxID                   |
 | Concept | Liquidity Identity Layer |
 
 ---
