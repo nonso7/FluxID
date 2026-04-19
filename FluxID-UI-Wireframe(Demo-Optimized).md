@@ -1,8 +1,12 @@
-🎯 FluxID UI Wireframe (Demo-Optimized)
-🖥️ Screen 1: Landing / Connect State
-Goal:
+# 🎯 FluxID UI Wireframe (Demo-Optimized)
 
-Immediately communicate what the product does + push to action.
+---
+
+## 🖥️ Screen 1: Landing / Input State
+
+### Goal:
+
+Immediately communicate value + allow instant interaction
 
 ## Layout (Centered, Minimal)
 
@@ -12,22 +16,30 @@ Immediately communicate what the product does + push to action.
 | Turn wallet activity into a |
 | simple financial trust score |
 | |
-| [ Connect Wallet ] |
+| [ Enter Wallet Address ] |
 | |
-| (Freighter required) |
+| [ Analyze Wallet ] |
+| |
+| (Optional: Connect Wallet to auto-fill) |
 | |
 
 ---
 
-Notes:
-No navbar. No distractions.
-One CTA only.
-Subtitle = your positioning (VERY important)
-Clean spacing, lots of white/dark space
-⚡ Screen 2: Loading State (Short but Polished)
-Goal:
+### Notes:
 
-Make system feel intelligent (not static)
+- Address input is PRIMARY (not wallet connect)
+- One clear action: **Analyze Wallet**
+- Wallet connect = optional convenience only
+- No navbar, no distractions
+- Clean spacing, strong typography
+
+---
+
+## ⚡ Screen 2: Loading State
+
+### Goal:
+
+Make system feel intelligent and alive
 
 ---
 
@@ -36,20 +48,28 @@ Make system feel intelligent (not static)
 | [ animated loader / dots ] |
 | |
 | Fetching transaction history |
-| Calculating liquidity score |
+| Computing liquidity score |
+| Evaluating behavior patterns |
 
 ---
 
-Notes:
-This builds perceived intelligence
-Keep under 2–3 seconds ideally
-🧠 Screen 3: MAIN DASHBOARD (CORE MOMENT)
-Goal:
+### Notes:
+
+- Keep under 2–3 seconds
+- Messages rotate (feels dynamic)
+- Builds trust in the system
+
+---
+
+## 🧠 Screen 3: MAIN DASHBOARD (CORE MOMENT)
+
+### Goal:
 
 User instantly understands:
+
 👉 “This wallet is trustworthy (or not)”
 
-## Layout (CRITICAL — follow this strictly)
+---
 
 ## | Wallet: GABCD...X9K2 |
 
@@ -71,117 +91,186 @@ to improve long-term stability.
 
 ---
 
-🔥 Design Rules (NON-NEGOTIABLE)
+## 🔥 Design Rules (NON-NEGOTIABLE)
 
-1. Score is KING
-   Biggest element on screen
-   Font size: VERY large
-   Centered
-   Nothing competes with it
-2. Risk is SECOND
-   Color-coded:
-   Green = Low
-   Yellow = Medium
-   Red = High
-   Must be immediately visible
-3. Insight = SIMPLE SENTENCE
-   Not paragraphs
-   Not analytics-heavy
+### 1. Score is KING
 
-Just:
+- Largest element on screen
+- Centered
+- Nothing competes with it
 
-“You’re consistent” OR “Your flow is unstable”
+### 2. Risk is SECOND
 
-4. Suggestion = ONE ONLY
-   Don’t show multiple cards
-   Keep it tight and actionable
-   📊 Screen 4: Supporting Insight (Below Fold or Section)
-   Goal:
+- Color-coded:
+  - Green = Low
+  - Yellow = Medium
+  - Red = High
+- Immediately visible
+
+### 3. Insight = ONE SENTENCE
+
+- No paragraphs
+- No jargon
+
+Example:
+
+- “Your income flow is consistent”
+- “Your spending is highly unstable”
+
+### 4. Suggestion = ONE ACTION
+
+- Clear and actionable
+- No multiple cards
+
+---
+
+## 📊 Screen 4: Supporting Insights (Below Fold)
+
+### Goal:
 
 Add credibility WITHOUT clutter
 
 ---
 
-        FLOW OVERVIEW (30 days)
+### Score Breakdown
 
-        [ simple line / area chart ]
-
----
-
-Inflow: $2,400
-Outflow: $1,950
-Tx Count: 34
+- Inflow Consistency: 40%
+- Outflow Stability: 30%
+- Transaction Frequency: 30%
 
 ---
 
-Notes:
-This is supporting, not primary
-If removed → product should still make sense
-❌ What NOT to Build (Very Important)
+### Flow Overview (30 days)
+
+[ simple line / area chart ]
+
+---
+
+Inflow: $2,400  
+Outflow: $1,950  
+Transactions: 34  
+Avg Transaction: $70
+
+---
+
+### Key Risk Factors
+
+- Irregular income pattern
+- High spending spikes
+
+---
+
+### Notes:
+
+- This section supports the score
+- Not required for understanding
+- Avoid overloading visuals
+
+---
+
+## ❌ What NOT to Build
 
 Do NOT:
 
-❌ Add multiple dashboards
-❌ Add tabs (Overview, Analytics, etc.)
-❌ Add complex filters
-❌ Add too many charts
-❌ Show raw transaction tables
+- Add multiple dashboards
+- Add tab-heavy navigation (Analytics, Security, etc.)
+- Add complex filters
+- Add raw transaction tables
+- Add unnecessary charts
 
-👉 That’s how teams lose.
+👉 Simplicity wins the demo.
 
-🎬 Demo Flow (What Judges Will See)
-Step 1:
+---
 
-Open app
-→ Clean screen
-→ “Connect Wallet”
+## 🎬 Demo Flow (What Judges See)
 
-Step 2:
+### Step 1:
 
-Click connect
-→ Loading state (“Analyzing wallet…”)
+Open app  
+→ Clean input screen  
+→ Enter wallet address
 
-Step 3 (WOW MOMENT):
+### Step 2:
+
+Click "Analyze"  
+→ Loading state appears
+
+### Step 3 (WOW MOMENT):
 
 Score appears:
 
 82 — Low Risk
 
-Judge instantly understands:
-👉 “This is a trust score”
+👉 Instant understanding:
+“This is a financial trust score”
 
-Step 4:
+---
+
+### Step 4:
 
 You say:
 
-“We turn wallet behavior into a trust score.”
+“We turn wallet behavior into a simple trust score.”
 
-Step 5:
+---
 
-Scroll slightly → show chart
+### Step 5:
 
-“And here’s how we derive it from flow patterns.”
+Scroll slightly → show flow chart
+
+“And this is how we derive it from transaction behavior.”
+
+---
 
 DONE.
 
-🧩 Component Breakdown (For Your Frontend Guy)
-Core Components
-ConnectCard
-ScoreDisplay ⭐ (most important)
-RiskBadge
-InsightText
-SuggestionCard
-FlowChart
-Layout Structure
+---
+
+## 🧩 Component Breakdown
+
+### Core Components
+
+- AddressInput ⭐
+- AnalyzeButton
+- ScoreDisplay ⭐ (most important)
+- RiskBadge
+- InsightText
+- SuggestionCard
+- ScoreBreakdown
+- FlowChart
+- FactorsList
+
+---
+
+## 🏗️ Layout Structure
+
 <App>
-<WalletProvider>
-<MainContainer>
-<HeaderWallet />
-<ScoreDisplay />
-<RiskBadge />
-<InsightText />
-<SuggestionCard />
-<FlowChart />
-</MainContainer>
-</WalletProvider>
+  <MainContainer>
+    <AddressInput />
+    <AnalyzeButton />
+
+    <ScoreDisplay />
+    <RiskBadge />
+    <InsightText />
+    <SuggestionCard />
+
+    <ScoreBreakdown />
+    <FlowChart />
+    <FactorsList />
+
+  </MainContainer>
 </App>
+
+---
+
+## 🧠 Key Principle
+
+If the user only sees:
+
+- Score
+- Risk
+- One sentence
+
+👉 The product must still make complete sense.
+
+Everything else is supporting.

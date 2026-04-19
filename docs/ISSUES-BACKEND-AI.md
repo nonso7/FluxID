@@ -1,8 +1,9 @@
 # Backend & AI Issues - FluxID
 
-This document tracks backend infrastructure and scoring logic for FluxID.
+This document tracks backend infrastructure, scoring logic, and AI systems for FluxID.
 
-Core Principle:
+## Core Principle
+
 The backend exists to do ONE thing:
 
 > Turn wallet transaction history into a trust score.
@@ -26,16 +27,16 @@ Everything else supports that.
 - [x] Setup Node.js service (Fastify — lightweight)
 - [x] Connect to Horizon API (testnet + mainnet)
 - [x] Fetch recent payments for a wallet (retry + timeout)
-- [x] Extract payment operations only (native + credit_alphanum)
+- [x] Extract payment operations only
 - [x] Classify:
-  - Inflow (incoming funds)
-  - Outflow (outgoing funds)
+  - Inflow
+  - Outflow
 
 **Evidence:** `backend/src/services/horizon.service.ts`
 
 ---
 
-### Issue #BK-2: In-Memory Processing (No Heavy DB)
+### Issue #BK-2: In-Memory Processing
 
 **Category:** [INFRA]  
 **Status:** COMPLETED  
@@ -45,15 +46,15 @@ Everything else supports that.
 
 **Tasks:**
 
-- [x] Process transactions in-memory (no DB dependency)
-- [x] Normalize data (amount, timestamp, type)
-- [x] Lightweight in-memory TTL cache
+- [x] In-memory processing (no DB)
+- [x] Normalize transaction data
+- [x] TTL caching
 
 **Evidence:** `backend/src/services/cache.service.ts`
 
 ---
 
-## Phase 2: Scoring Engine (CORE LOGIC)
+## Phase 2: Scoring Engine (CORE)
 
 ### Issue #BK-3: Rule-Based Liquidity Score
 
@@ -65,16 +66,16 @@ Everything else supports that.
 
 **Tasks:**
 
-- [x] Inflow consistency (coefficient-of-variation on inter-arrival times)
-- [x] Outflow stability (coefficient-of-variation on amounts)
-- [x] Transaction frequency (normalized activity level)
+- [x] Inflow consistency
+- [x] Outflow stability
+- [x] Transaction frequency
 - [x] Flow stability (inflow/outflow ratio)
 - [x] Counterparty diversity
 - [x] Volume component
-- [x] Weighted combination into final score (0–100)
+- [x] Weighted scoring model
 
-**Output:** `score: number`, `metrics: ScoreMetrics`  
-**Evidence:** `backend/src/services/scoring.service.ts`
+**Output:** `score`, `metrics`  
+**Evidence:** `scoring.service.ts`
 
 ---
 
@@ -84,293 +85,257 @@ Everything else supports that.
 **Status:** COMPLETED  
 **Priority:** High
 
-**Description:** Convert score into simple risk level.
-
 **Tasks:**
 
-- [x] Thresholds: Low >= 70, Medium 40–69, High < 40
-- [x] Generate short explanation string driven by sub-scores
-
-**Output:** `risk: Low | Medium | High`, `insight: string`
+- [x] Thresholds:
+  - Low ≥ 70
+  - Medium 40–69
+  - High < 40
+- [x] Generate explanation
 
 ---
 
-## Phase 3: API Layer (Demo Critical)
+## Phase 3: API Layer
 
-### Issue #BK-5: Core Score Endpoint
+### Issue #BK-5: Score Endpoint
 
 **Category:** [API]  
 **Status:** COMPLETED  
 **Priority:** Critical
 
-**Description:** Serve score to frontend.
+**Endpoint:**
 
-**Tasks:**
+GET /score/:accountId
 
-- [x] Fastify server (`src/app.ts`)
-- [x] `GET /score/:accountId?network=&refresh=&sync=`
-- [x] JSON response with score, risk, insight, suggestion, metrics
-- [x] TTL-based caching
-- [x] Input validation (Stellar key format + network)
-- [x] Support endpoints: `/payments/:accountId`, `/transactions/:accountId`, `/health`
+**Returns:**
 
-**Evidence:** `backend/src/routes/score.routes.ts`
+- Score
+- Risk
+- Breakdown
+- Factors
+- Insight
+- Suggestions
 
 ---
 
-## Phase 4: Suggestions Engine (Lightweight)
+## Phase 4: Suggestions Engine
 
 ### Issue #BK-6: Recommendation Logic
 
 **Category:** [AI]  
-**Status:** COMPLETED  
-**Priority:** Medium
-
-**Description:** Generate simple behavioral suggestions.
+**Status:** COMPLETED
 
 **Tasks:**
 
-- [x] Rule-based suggestion system (`generateInsightAndSuggestion`)
-- [x] Limit to 1 primary suggestion per wallet
-- [x] Simple, human language
+- [x] Rule-based suggestions
+- [x] Max 1 primary suggestion
+- [x] Simple language
 
 ---
 
-## Phase 5: Optional Integration (If Time Allows)
+## Phase 5: Optional On-Chain Integration
 
 ### Issue #BK-7: Smart Contract Sync
 
 **Category:** [INTEGRATION]  
-**Status:** COMPLETED  
-**Priority:** Medium
+**Status:** COMPLETED
 
-**Description:** Push computed score to Soroban contract.
+**Purpose:**
 
-**Tasks:**
-
-- [x] `ContractService.syncScore(wallet, score, risk)` invokes `set_score` via Soroban RPC
-- [x] Prepare → sign → send → poll until SUCCESS/FAIL
-- [x] Graceful no-op when `ADMIN_SECRET_KEY` / contract ID unset
-- [x] Exposed via `POST /score/:accountId/sync` and `?sync=true` on GET
-- [x] Returns structured `ContractSyncResult` with error on failure
-
-**Evidence:** `backend/src/services/contract.service.ts`
+- Store score on-chain
+- Demonstrate verifiability
 
 ---
 
-## Phase 6: Agentic AI Payments (X402 Integration)
+## Phase 6: Agentic AI Payments (X402)
 
-### Issue #BK-8: 402 Payment Middleware
+### Issue #BK-8 → BK-12
 
-**Category:** [AI / PAYMENTS]  
-**Status:** COMPLETED  
-**Priority:** High
+**Status:** COMPLETED
 
-**Description:** Enable pay-per-request API access using Stellar payments.
+**Capabilities:**
 
-**Tasks:**
-
-- [x] Intercept protected endpoint `/paid/score/:accountId`
-- [x] Return HTTP 402 when no `requestId` supplied
-- [x] Response includes:
-  - `payTo` (Stellar payment address)
-  - `amount` (required XLM amount)
-  - `memo` (unique `FLX-xxxxxxxx` identifier)
-  - `expiresAt`, `retryUrl`, human-readable `instructions`
-- [x] Pending requests stored in-memory with TTL (default 15 min)
-
-**Evidence:** `backend/src/routes/paid.routes.ts`, `backend/src/services/payment.service.ts`
+- Payment-gated API access (HTTP 402)
+- Stellar payment verification
+- Retry flow for agents
+- MCP-compatible endpoints
 
 ---
 
-### Issue #BK-9: Payment Verification (Stellar)
-
-**Category:** [BLOCKCHAIN]  
-**Status:** COMPLETED  
-**Priority:** Critical
-
-**Description:** Verify incoming payments on-chain.
-
-**Tasks:**
-
-- [x] Query Horizon `/accounts/:payTo/transactions` for recent txs
-- [x] Match text memo exactly against the request's `FLX-xxxxxxxx`
-- [x] Fetch operations for the matched tx via `/transactions/:hash/operations`
-- [x] Confirm native XLM payment to the receive address with `amount >= required`
-- [x] Mark request as paid and remember `txHash`
-
-**Evidence:** `PaymentService.verify()` in `backend/src/services/payment.service.ts`
-
----
-
-### Issue #BK-10: Agent Retry Flow
-
-**Category:** [AI]  
-**Status:** COMPLETED  
-**Priority:** High
-
-**Description:** Enable seamless retry after payment.
-
-**Tasks:**
-
-- [x] Request state persisted by `requestId` in `PaymentService`
-- [x] Retry via `GET /paid/score/:accountId?requestId=...`
-- [x] If already paid → return cached score (no re-verification)
-- [x] If pending → re-verify on Horizon, return 402 again if still pending
-- [x] Expired / unknown requestId → 404 / 410 with recovery guidance
-
----
-
-### Issue #BK-11: Paid Endpoint Wrapper
-
-**Category:** [API]  
-**Status:** COMPLETED  
-**Priority:** High
-
-**Description:** Wrap scoring endpoint with payment requirement.
-
-**Tasks:**
-
-- [x] `GET /paid/score/:accountId` — 402 challenge or paid score
-- [x] Response is agent-friendly (structured JSON on 402 and 200)
-- [x] Returns score only when payment verified
-- [x] Optional `?sync=true` to push the score on-chain immediately after payment
-- [x] Free-tier preserved via existing unauthenticated `GET /score/:accountId`
-
----
-
-### Issue #BK-12: MCP / Agent Compatibility
-
-**Category:** [AI]  
-**Status:** COMPLETED  
-**Priority:** Medium
-
-**Description:** Make FluxID usable by AI agents via an MCP-style tool interface.
-
-**Tasks:**
-
-- [x] `GET /mcp/tools` — returns tool manifest including `analyze_wallet` schema
-- [x] `POST /mcp/tools/analyze_wallet` — direct invocation with `{ wallet_address, network? }`
-- [x] `POST /mcp/tools/call` — generic dispatch `{ name, arguments }`
-- [x] Returns structured JSON (`success`, `tool`, `result` / `error`)
-- [x] Compatible with Claude / Gemini / ChatGPT tool-calling conventions
-
-**Evidence:** `backend/src/routes/mcp.routes.ts`
-
----## Phase X: AI Augmentation Layer
+## Phase X: AI Augmentation Layer
 
 ### Issue #BK-AI-1: Insight Generation
 
-**Category:** [AI]
 **Status:** COMPLETED
-**Priority:** Medium
 
-**Description:** Generate human-readable explanations from scoring output.
-
-**Tasks:**
-
-- [x] Send structured scoring data to LLM (Anthropic Claude, native `fetch`, no new deps)
-- [x] Generate 1-line insight (max ~25 words, neutral tone, grounded in sub-scores)
-- [x] Generate enhanced explanation (surfaced as `aiInsight` in `/score` response)
-
-**Fallback:** When `ANTHROPIC_API_KEY` is unset or the API call fails/timeouts, the
-response still includes the deterministic rule-based `insight` field. AI augmentation
-is strictly additive — it never blocks the score response.
-
-**Evidence:** `backend/src/services/ai.service.ts`, integrated in `backend/src/routes/score.routes.ts`.
+- Generate 1-line explanation
+- Fallback to rule-based insight
 
 ---
 
 ### Issue #BK-AI-2: Suggestion Generation
 
-**Category:** [AI]
 **Status:** COMPLETED
-**Priority:** Medium
 
-**Description:** Generate actionable financial suggestions.
-
-**Tasks:**
-
-- [x] Convert scoring signals into advice (prompt is weighted toward weakest sub-scores)
-- [x] Limit to 1–2 suggestions (enforced in the prompt and parser)
-- [x] Ensure clarity and simplicity (max ~15 words each, positive phrasing)
-
-Returned as `aiSuggestions: string[]` in the `/score` response; frontend renders them
-under an "AI Insight" card above the rule-based suggestions.
-
-**Evidence:** Same as BK-AI-1 — single `generateAiAugmentation()` call returns both.
+- 1–2 clear suggestions
+- Based on weakest signals
 
 ---
 
 ### Issue #BK-AI-3: Pattern Interpretation (Optional)
 
-**Category:** [AI]  
 **Priority:** Low
 
-**Description:** Use AI to detect deeper behavioral patterns.
+- Detect deeper behavioral patterns
+- Not required for MVP
 
-**Tasks:**
+---
 
-- [ ] Identify irregular income cycles
-- [ ] Detect spending spikes
-- [ ] Generate pattern-based insights
+## Post-MVP Roadmap (Backend Evolution)
 
-## Post-Grant Expansion (Future — OmniFlow Level)
+This defines how the backend evolves beyond single-wallet scoring.
 
-These define long-term direction, not MVP.
+---
 
-### 1. Advanced Data Pipeline
+### 1. Multi-Wallet Intelligence Layer
 
-- Persistent storage (PostgreSQL)
-- Historical transaction indexing
-- Real-time streaming updates
+Move from:
 
-### 2. Machine Learning Models
+> Single wallet analysis
 
-- Predict liquidity stress
-- Forecast default probability
-- Behavioral pattern detection
+To:
 
-### 3. Multi-Wallet Intelligence
+> Batch and cohort-level analysis
 
-- Aggregate identity across wallets
-- Cross-platform financial profiles
+Capabilities:
 
-### 4. Intelligent Recommendation Engine
+- Analyze thousands of wallets
+- Aggregate scores across user groups
+- Compute:
+  - Average score
+  - Risk distribution
+  - Trend over time
 
-- Personalized financial strategies
-- Dynamic behavior-based suggestions
+---
 
-### 5. API for External Platforms
+### 2. Cohort Query Engine
 
-Public endpoints for lending platforms, remittance apps, marketplaces.
+Enable filtering based on behavior + score.
+
+Examples:
+
+- Score > 75
+- Monthly inflow > threshold
+- Interaction with specific contracts
+
+Backend Requirements:
+
+- Query layer on top of scoring outputs
+- Indexed wallet datasets (future DB layer)
+
+---
+
+### 3. Risk Aggregation & Network Analysis
+
+Detect systemic risk patterns.
+
+Capabilities:
+
+- Identify clusters of high-risk wallets
+- Track risky counterparties
+- Analyze transaction relationships
+
+---
+
+### 4. Event Monitoring & Alerts
+
+Real-time risk detection.
+
+Triggers:
+
+- Sudden score drops
+- Risk spikes across cohorts
+- Abnormal transaction behavior
+
+Example:
+
+> “12% of users dropped below score 50”
+
+---
+
+### 5. Intelligence API Layer
+
+Expand API from:
+
+/score/{wallet}
+
+To:
+
+/cohort
+/metrics
+/alerts
+/risk-clusters
+
+Enables:
+
+- Lending platforms
+- Marketplaces
+- Financial systems
+
+---
+
+### 6. AI-Assisted Decision Layer
+
+Enable systems to act on scores.
+
+Capabilities:
+
+- Automated loan decisions
+- Risk-based routing
+- Smart contract triggers
 
 ---
 
 ## Final Guideline
 
-Backend must be: Fast, Simple, Reliable, Demo-ready.  
-Not: Complex, Overengineered, Feature-heavy.
+Backend must remain:
+
+- Fast
+- Deterministic
+- Explainable
+- Reliable
+
+Avoid:
+
+- Overengineering
+- Premature ML complexity
+- Heavy infrastructure before need
+
+---
 
 ## Success Metric
 
 During demo:
 
-- Wallet is analyzed instantly
-- Score is returned correctly
+- Wallet → Score instantly
+- Output is clear
 - Insight is understandable
-- No API failures
+- No failures
 
 ---
 
-## Implementation Complete
+## Implementation Status
 
-All backend issues have been implemented:
+- Data ingestion: COMPLETE
+- Scoring engine: COMPLETE
+- API layer: COMPLETE
+- Suggestions: COMPLETE
+- X402 payments: COMPLETE
+- AI augmentation: PARTIAL (pattern detection deferred)
 
-- Phase 1: Data Ingestion (COMPLETE) — BK-1, BK-2
-- Phase 2: Scoring Engine (COMPLETE) — BK-3, BK-4
-- Phase 3: API Layer (COMPLETE) — BK-5
-- Phase 4: Suggestions Engine (COMPLETE) — BK-6
-- Phase 5: Optional Integration (COMPLETE) — BK-7
-- Phase 6: Agentic AI Payments / X402 (COMPLETE) — BK-8, BK-9, BK-10, BK-11, BK-12
-- Phase X: AI Augmentation Layer (PARTIAL) — BK-AI-1, BK-AI-2 complete; BK-AI-3 deferred (Priority Low)
+---
+
+FluxID backend is now:
+
+> A scoring engine today  
+> A financial intelligence layer tomorrow

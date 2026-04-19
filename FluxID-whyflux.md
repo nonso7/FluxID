@@ -1,213 +1,249 @@
 # FluxID — Funding Positioning & Ecosystem Alignment
 
-This document outlines how FluxID aligns with key principles required for funding, ecosystem support, and long-term sustainability within the Stellar ecosystem.
+This document outlines how FluxID aligns with core funding principles, ecosystem priorities, and long-term infrastructure value within the Stellar network.
 
 ---
 
 ## 1. Problem–Market Fit
 
-FluxID is built around a real and observed problem:
+FluxID is built around a clear and persistent problem:
 
 > There is no reliable way to measure financial trust using wallet behavior in Web3.
 
-### Real Context
+### Context
 
-- Freelancers receive inconsistent payments due to lack of trust signals
-- Lenders cannot assess borrower reliability on-chain
-- Remittance users lack structured financial identity
+Across both traditional finance and crypto:
 
-### Validation
+- Systems measure balances, not behavior
+- Trust is inferred, not quantified
+- Financial reliability is difficult to verify in real time
 
-This is not a hypothetical issue:
+### Real-World Impact
 
-- Trust gaps already exist in cross-border payments
-- Wallet activity is increasing, but reputation is missing
-- Existing systems focus on balances, not behavior
+- Freelancers face delayed or restricted payments due to lack of trust signals
+- Lending platforms cannot assess borrower reliability on-chain
+- Cross-border transactions carry uncertainty and risk
+
+In Web3:
+
+- Wallets are pseudonymous
+- Reputation is fragmented
+- No standard trust layer exists
 
 ### Our Approach
 
 FluxID focuses on one core function:
 
-> Turn wallet transaction history into a simple trust score.
+> Turn wallet transaction history into a simple, explainable trust score.
 
-We are solving a **real, recurring, and measurable problem**.
+This is a **repeatable, data-driven problem** with clear demand across multiple financial use cases.
 
 ---
 
 ## 2. Ecosystem Alignment (Stellar Fit)
 
-FluxID is deeply aligned with the Stellar ecosystem.
+FluxID is purpose-built for the Stellar ecosystem.
 
 ### Why Stellar
 
-- Stellar is optimized for payments and remittances
+- Optimized for payments and remittances
 - High transaction volume → rich behavioral data
-- Strong presence in emerging markets
+- Strong adoption in emerging markets
 
-### How FluxID Fits
+### How FluxID Integrates
 
-FluxID does not reinvent infrastructure. It builds on top of it.
+FluxID builds on existing infrastructure rather than replacing it:
 
 - Uses Horizon / RPC for transaction data
-- Integrates with Stellar wallets (Freighter)
-- Extends Soroban for identity and scoring primitives
+- Integrates with Stellar wallets (e.g. Freighter)
+- Extends Soroban for optional on-chain scoring and identity
 
-### Position in Ecosystem
+### Ecosystem Role
 
-FluxID becomes:
+FluxID acts as:
 
-> A trust and risk layer for all financial activity on Stellar
+> A trust and risk layer for financial activity on Stellar
 
-This includes:
+This supports:
 
-- Remittance apps
-- Lending platforms
+- Remittance platforms
+- Lending protocols
 - Payment systems
+- Marketplaces
 
 ---
 
-## 3. Trust as a Core Principle
+## 3. Trust as Infrastructure
 
-FluxID is fundamentally about trust.
+FluxID is not just a feature — it is a trust primitive.
 
-### What We Are Building
+### Core Function
 
-Not just a product — but a **trust signal layer**.
-
-We help platforms answer:
+FluxID enables platforms to answer:
 
 > “Can this wallet be trusted financially?”
 
-### How We Build Trust
+### How Trust is Built
 
-- Transparent scoring logic (rule-based for MVP)
-- Clear, explainable outputs (score + risk + insight)
-- Behavior-based, not identity-based
+- Deterministic, rule-based scoring (MVP)
+- Transparent outputs (score, risk, breakdown, factors)
+- Behavior-based analysis (not identity-based assumptions)
 
 ### Why This Matters
 
-Users adopt systems they trust.
+Trust is the foundation of financial systems.
 
 FluxID enables:
 
-- Better financial decisions
+- Faster decisions
 - Reduced uncertainty
-- Increased confidence in transactions
+- More efficient transactions
 
 ---
 
-## 4. Build in Public (Visibility Strategy)
+## 4. Product Philosophy
 
-We are actively building FluxID in the open.
+FluxID is built as infrastructure, not just a user-facing app.
 
 ### What This Means
 
-- Public GitHub repository
-- Open documentation (PRD, issues, roadmap)
-- Transparent development process
+- API-first design
+- Platform-agnostic usage
+- Simple, composable outputs
 
-### Ongoing Actions
+### Core Principle
 
-- Sharing progress updates
-- Publishing demo flows
-- Documenting architecture decisions
+> Score any wallet address without requiring ownership.
 
-### Why This Matters
+This enables:
 
-> Visibility builds credibility.
+- Instant analysis
+- No onboarding friction
+- Broad integration across platforms
 
-People don’t just use products — they follow builders.
+Wallet connection is optional and used only for:
+
+- Convenience (auto-fill)
+- Future identity features
 
 ---
 
-## 5. Reputation & Builder Credibility
+## 5. Build in Public (Visibility Strategy)
 
-We understand that funding is not just about the idea, but the people behind it.
+FluxID is developed transparently.
 
-### Our Position
+### Approach
 
-- Active contributors in the Stellar ecosystem
-- Experience with Soroban and smart contract development
-- Participation in open-source and hackathon environments
+- Public GitHub repository
+- Open documentation (PRD, roadmap, issues)
+- Visible iteration and improvements
 
-### Philosophy
+### Why It Matters
 
-> Even without funding, this is something we would continue building.
+> Transparency builds trust in both the product and the team.
 
-FluxID is not opportunistic — it is aligned with long-term ecosystem value.
+This increases:
+
+- Credibility
+- Community engagement
+- Ecosystem alignment
 
 ---
 
 ## 6. Product Readiness
 
-FluxID is not just an idea — it is designed to be demonstrable quickly.
+FluxID is designed to be functional and demonstrable within a short build cycle.
 
 ### MVP Capabilities
 
-- Wallet connection
-- Transaction ingestion
-- Liquidity score calculation
-- Risk classification
-- Simple dashboard
+- Address-based wallet analysis
+- Transaction ingestion via Stellar Horizon
+- Rule-based liquidity scoring
+- Risk classification (Low / Medium / High)
+- Explainable output (breakdown, factors, insights)
+- Clean, score-first dashboard
 
-### Demo Strength
+### Demonstration Flow
 
-The product can show:
+> Wallet → Score → Explanation → Decision
 
-> Wallet → Score → Insight → Decision
-
-This creates a clear and compelling demonstration of value.
+This creates an immediate and intuitive understanding of value.
 
 ---
 
 ## 7. Users & Adoption Strategy
 
-We recognize that **users matter more than the product alone**.
+FluxID is infrastructure, but adoption starts with a focused entry point.
 
 ### Initial Target
 
-- Freelancers in emerging markets
-- Users receiving cross-border payments
+- Freelancers in emerging markets (starting with West Africa)
 
-### Early Adoption Strategy
+### Why This Segment
 
-- Direct onboarding of test users
-- Demo-based validation
-- Feedback-driven iteration
+- Heavy reliance on cross-border payments
+- Limited access to formal credit systems
+- Trust directly impacts income and payment speed
+
+### Early Strategy
+
+- Direct onboarding of test wallets
+- Demo-driven validation
+- Iterative improvements based on usage
 
 ### Goal
 
-> Have users ready to use FluxID immediately after MVP.
+> Enable real users to derive value immediately from wallet-based trust scoring.
 
 ---
 
 ## 8. Opportunity vs Risk
 
-Users adopt systems when value outweighs risk.
+Adoption depends on perceived value versus perceived risk.
 
-FluxID reduces risk by:
+### How FluxID Reduces Risk
 
-- Making financial behavior visible
-- Providing simple, understandable scores
-- Enabling better decision-making
+- Makes financial behavior visible
+- Provides simple, interpretable scores
+- Removes ambiguity in decision-making
 
-And creates opportunity by:
+### How FluxID Creates Opportunity
 
-- Unlocking access to credit
-- Improving payment terms
-- Enabling new financial models
+- Enables access to credit
+- Improves payment terms
+- Unlocks flexible financial models
 
 ---
 
-## 9. Summary: Alignment with Funding Principles
+## 9. Strategic Positioning
 
-FluxID aligns with key funding criteria:
+FluxID is not:
 
-### Fit
+- A dashboard
+- A portfolio tracker
+- A basic analytics tool
 
-- Solves a real, validated problem
+FluxID is:
 
-### Alignment
+> A programmable trust layer for financial systems.
+
+It transforms raw transaction data into:
+
+- Decision-ready signals
+- Risk intelligence
+- Financial reputation
+
+---
+
+## 10. Alignment with Funding Principles
+
+FluxID aligns strongly with key funding criteria:
+
+### Problem Fit
+
+- Solves a real, observed, and recurring problem
+
+### Ecosystem Alignment
 
 - Built directly on Stellar infrastructure
 
@@ -215,16 +251,24 @@ FluxID aligns with key funding criteria:
 
 - Focused on financial reliability and transparency
 
-### Visibility
+### Execution
 
-- Developed in public with clear documentation
+- Clear MVP with strong demo capability
+
+### Vision
+
+- Scales into infrastructure for platforms and AI systems
 
 ---
 
 ## Final Note
 
-FluxID is not just a project.
+FluxID is not just a product.
 
 It is a foundational layer for financial trust in Web3.
 
-And we are committed to building it — with or without funding.
+Built to work immediately.
+Designed to scale across platforms.
+Positioned to become core infrastructure.
+
+We are committed to building it — with or without funding.
