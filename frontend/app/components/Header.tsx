@@ -80,7 +80,7 @@ export default function Header() {
             <button
               onClick={connect}
               disabled={isLoading}
-              className="btn btn-primary text-sm py-2 flex items-center gap-2 disabled:opacity-60"
+              className="btn btn-outline text-sm py-2 flex items-center gap-2 disabled:opacity-60"
             >
               <Wallet size={14} />
               {isLoading ? "Connecting..." : "Connect Wallet"}
