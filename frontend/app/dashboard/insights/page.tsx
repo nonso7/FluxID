@@ -1,0 +1,48 @@
+"use client";
+
+import { Sparkles } from "lucide-react";
+import { useAnalysis } from "../context/AnalysisContext";
+import ExplanationCard from "../../components/ExplanationCard";
+import AssetBreakdown from "../../components/AssetBreakdown";
+
+export default function InsightsPage() {
+  const { analysis, analyzedAddress, isAnalyzing } = useAnalysis();
+
+  return (
+    <>
+      <h1 style={{ color: "var(--foreground)", fontWeight: 800, fontSize: 28 }} className="mb-1">
+        Insights
+      </h1>
+      <p style={{ color: "var(--foreground-muted)", fontSize: 14 }} className="mb-6">
+        Human-readable explanation of what this wallet&apos;s behavior actually looks like.
+      </p>
+
+      {isAnalyzing && (
+        <div style={{ background: "var(--card)", border: "1px solid var(--border)" }} className="rounded-2xl p-6 text-center">
+          <p style={{ color: "var(--foreground-muted)", fontSize: 14 }}>Generating insight…</p>
+        </div>
+      )}
+
+      {!isAnalyzing && !analysis && (
+        <div style={{ background: "var(--card)", border: "1px solid var(--border)" }} className="rounded-2xl p-8 text-center">
+          <Sparkles size={32} style={{ color: "var(--foreground-muted)", margin: "0 auto 12px" }} />
+          <p style={{ color: "var(--foreground-muted)", fontSize: 14 }}>
+            Analyze a wallet to see its insight and suggestions here.
+          </p>
+        </div>
+      )}
+
+      {analysis && !isAnalyzing && (
+        <div className="space-y-6">
+          {analyzedAddress && (
+            <p style={{ color: "var(--foreground-dim)", fontSize: 12 }} className="font-mono">
+              Target: {analyzedAddress}
+            </p>
+          )}
+          <ExplanationCard explanation={analysis.explanation} />
+          <AssetBreakdown assets={analysis.assets} usd={analysis.usd} />
+        </div>
+      )}
+    </>
+  );
+}

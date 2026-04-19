@@ -8,9 +8,8 @@ import {
   LayoutDashboard,
   BarChart3,
   Settings,
-  Wallet,
-  Shield,
-  Activity,
+  ArrowLeftRight,
+  Sparkles,
   Bot,
   ChevronLeft,
   ChevronRight,
@@ -19,11 +18,10 @@ import {
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/dashboard/agent", label: "Agent Demo", icon: Bot },
   { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
-  { href: "/dashboard/wallet", label: "Wallet", icon: Wallet },
-  { href: "/dashboard/security", label: "Security", icon: Shield },
-  { href: "/dashboard/activity", label: "Activity", icon: Activity },
+  { href: "/dashboard/transactions", label: "Transactions", icon: ArrowLeftRight },
+  { href: "/dashboard/insights", label: "Insights", icon: Sparkles },
+  { href: "/dashboard/agent", label: "Agent Demo", icon: Bot },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 

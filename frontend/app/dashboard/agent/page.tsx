@@ -1,33 +1,34 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import AgentDemo from "@/app/components/AgentDemo";
 import { useFreighter } from "@/app/context/FreighterContext";
+import { AlertTriangle } from "lucide-react";
 
 export default function AgentDemoPage() {
-  const router = useRouter();
-  const { isConnected, isLoading } = useFreighter();
-
-  useEffect(() => {
-    if (!isLoading && !isConnected) router.push("/");
-  }, [isLoading, isConnected, router]);
+  const { isConnected } = useFreighter();
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1
-          style={{ color: "var(--foreground)", letterSpacing: "-0.03em" }}
-          className="text-3xl font-black mb-2"
+    <>
+      <h1 style={{ color: "var(--foreground)", fontWeight: 800, fontSize: 28 }} className="mb-1">
+        Agent Demo
+      </h1>
+      <p style={{ color: "var(--foreground-muted)", fontSize: 14 }} className="mb-6">
+        An AI agent pays per request to unlock the FluxID score endpoint (X402 flow).
+      </p>
+
+      {!isConnected && (
+        <div
+          style={{ background: "#eab30820", border: "1px solid #eab308" }}
+          className="rounded-2xl p-4 mb-6 flex items-start gap-3"
         >
-          Agent Demo
-        </h1>
-        <p style={{ color: "var(--foreground-muted)", fontSize: 14 }}>
-          An AI agent pays per request to unlock the FluxID score endpoint (X402 flow).
-        </p>
-      </div>
+          <AlertTriangle size={18} style={{ color: "#eab308" }} className="mt-0.5 shrink-0" />
+          <p style={{ color: "#eab308", fontSize: 13 }}>
+            Connect Freighter to run the demo — this flow signs and submits a real testnet payment.
+          </p>
+        </div>
+      )}
 
       <AgentDemo />
-    </div>
+    </>
   );
 }

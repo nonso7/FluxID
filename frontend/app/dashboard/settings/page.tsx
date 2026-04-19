@@ -63,21 +63,18 @@ export default function SettingsPage() {
 
   if (!mounted) {
     return (
-      <div className="p-8">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 w-48 bg-[var(--surface)] rounded-lg" />
-          <div className="h-32 bg-[var(--surface)] rounded-xl" />
-        </div>
+      <div className="animate-pulse space-y-4">
+        <div className="h-8 w-48 bg-[var(--surface)] rounded-lg" />
+        <div className="h-32 bg-[var(--surface)] rounded-xl" />
       </div>
     );
   }
 
   return (
-    <div className="p-8">
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
         {/* Page Header */}
         <div className="flex items-center gap-3 mb-8">
           <div 
@@ -200,8 +197,7 @@ export default function SettingsPage() {
             )}
           </button>
         </div>
-      </motion.div>
-    </div>
+    </motion.div>
   );
 }
 
