@@ -49,7 +49,7 @@ export default function Dashboard() {
         Liquidity Score
       </h1>
       <p style={{ color: "var(--foreground-muted)", fontSize: 14 }} className="mb-6">
-        Enter a wallet address to get its liquidity score and understand its financial behavior instantly.
+        A wallet&apos;s financial reliability at a glance.
       </p>
 
       {error && (
@@ -154,8 +154,8 @@ function DashboardSummary({
             {analysis.metrics.transactionCount} transactions analyzed ·
             {" "}
             {analysis.explanation?.source === "llm"
-              ? `AI explanation via ${analysis.explanation.model ?? "Claude"}`
-              : "Rule-based explanation"}
+              ? `Behavior Insight`
+              : "Rule-based analysis"}
           </p>
         </div>
       </motion.div>
