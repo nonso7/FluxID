@@ -81,8 +81,16 @@ export default function Onboarding({ isOpen, onClose, initialStep = 0 }: Onboard
       setRect(null);
       return;
     }
-    updateRect(currentStep);
-  }, [isWelcomeLayout, currentStep, updateRect]);
+    const timer = setTimeout(() => {
+      const selector = steps[currentStep]?.selector;
+      if (!selector) return;
+      const el = document.querySelector(selector);
+      if (el) {
+        setRect(el.getBoundingClientRect());
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [currentStep, isWelcomeLayout]);
 
   useEffect(() => {
     if (!isOpen || isWelcomeLayout) return;
