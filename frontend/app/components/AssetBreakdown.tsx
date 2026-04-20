@@ -1,8 +1,11 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { AssetsBreakdown, UsdValuation } from "../../lib/scoring";
 import { ArrowDownLeft, ArrowUpRight } from "lucide-react";
+
+const COINGECKO_URL = "https://api.coingecko.com/api/v3/simple/price?ids=stellar&vs_currencies=usd";
 
 interface Props {
   assets?: AssetsBreakdown;
@@ -16,6 +19,18 @@ function fmt(n: number, maxFrac = 2): string {
 
 function usdFmt(n: number): string {
   return `$${n.toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}`;
+}
+
+// Fetch XLM price from CoinGecko (frontend fallback)
+async function fetchXlmPrice(): Promise<number | null> {
+  try {
+    const res = await fetch(COINGECKO_URL, { signal: AbortSignal.timeout(4000) });
+    if (!res.ok) return null;
+    const data = (await res.json()) as { stellar?: { usd?: number } };
+    return data?.stellar?.usd ?? null;
+  } catch {
+    return null;
+  }
 }
 
 function Row({
@@ -108,9 +123,19 @@ function DirectionColumn({
 }
 
 export default function AssetBreakdown({ assets, usd, className = "" }: Props) {
+  const [frontendPrice, setFrontendPrice] = useState<number | null>(null);
+
+  // Fetch XLM price from frontend if backend didn't provide it
+  useEffect(() => {
+    if (!usd?.xlmPriceUsd && assets) {
+      fetchXlmPrice().then(setFrontendPrice);
+    }
+  }, [usd?.xlmPriceUsd, assets]);
+
   if (!assets) return null;
 
-  const xlmPrice = usd?.xlmPriceUsd ?? null;
+  // Use backend price, or fallback to frontend-fetched price
+  const xlmPrice = usd?.xlmPriceUsd ?? frontendPrice;
 
   return (
     <motion.div
