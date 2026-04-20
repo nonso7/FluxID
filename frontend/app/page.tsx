@@ -278,7 +278,7 @@ export default function Home() {
             Start analyzing wallets today.
           </h2>
           <p style={{ color: "var(--foreground-muted)" }} className="text-sm mb-4">
-            Seriously — just paste an address and see what comes out.
+            Seriously, just paste an address and see what comes out.
           </p>
           <Link href="/dashboard" className="btn btn-primary text-sm inline-flex items-center gap-2">
             <Zap size={14} /> Launch App
