@@ -145,157 +145,14 @@ Live demo showing AI agent:
 
 ---
 
-## What FluxID Really Is
+## Use Cases
 
-FluxID is not just an app or a dashboard.
+FluxID is infrastructure for:
 
-It is a decision layer.
-
-It answers one simple question:
-
-"Can this wallet be trusted financially?"
-
-Instead of guessing, platforms can:
-
-- Query a wallet's behavior
-- Get a trust score
-- Understand why that score exists
-- Make decisions instantly
-
----
-
-## Core Product Principle
-
-FluxID can analyze any wallet address without requiring ownership.
-
-This means:
-
-- No login required
-- No wallet connection required
-- No permission needed
-
-Wallet connection exists only for:
-
-- Convenience (auto-fill)
-- Future identity features
-
-Not for access.
-
----
-
-## Problem
-
-Both traditional finance and crypto miss something critical:
-
-They track what you have, but not how you behave financially.
-
-Because of this:
-
-- Freelancers struggle to prove reliability
-- Payments get delayed due to lack of trust
-- Cross-border transactions carry uncertainty
-- Credit systems are slow, fragmented, or unavailable
-
-In Web3:
-
-- Wallets are anonymous
-- Reputation is fragmented
-- No standard trust layer exists
-
-So trust becomes guesswork.
-
----
-
-## Solution
-
-FluxID introduces a Liquidity Identity — a dynamic score based on financial behavior.
-
-It analyzes:
-
-- Income consistency
-- Spending patterns
-- Transaction frequency
-- Flow stability
-
-And produces:
-
-- Liquidity Score (0-100)
-- Risk Level (Low / Medium / High)
-- Score Breakdown (inflow, outflow, frequency)
-- Key Risk Factors
-- Human-readable insights
-- Actionable suggestions
-
----
-
-## Explainability (Core Differentiator)
-
-FluxID does not just output a score.
-
-It explains it.
-
-For every wallet, users can see:
-
-- Why the score was given
-- What patterns were detected
-- A breakdown of contributing factors
-- Transaction flow over time
-
-This ensures:
-
-- Transparency
-- Trust
-- Immediate understanding
-
----
-
-## Why On-Chain Storage Matters
-
-While scoring is computed off-chain for speed and flexibility, storing results on-chain provides:
-
-- Verifiability → Scores can be independently checked
-- Portability → Any app can read the same trust signal
-- Transparency → No hidden or mutable backend logic
-
-This makes the smart contract the **source of truth**, while the backend remains the **computation engine**.
-
----
-
-## Real Use Cases
-
-FluxID is infrastructure — not just a product.
-
-### Lending Platforms
-
-- Score = 82 → Approve loan
-- Score = 34 → Reduce or reject
-
-### Freelance Platforms
-
-- Consistent inflow + stable spending → Reliable user
-
-### Remittance Apps
-
-- Detect behavior patterns → Suggest better allocation
-
-### Marketplaces
-
-- Trusted users → Enable flexible payments
-
----
-
-## AI Layer (Explainability)
-
-FluxID uses a hybrid model:
-
-- Rule-based engine → scoring logic (deterministic)
-- AI models → explanations, reasoning, suggestions
-
-This ensures:
-
-- Consistent scoring
-- Clear explanations
-- Better usability
+- **Lending Platforms** — Score = 82 → Approve loan, Score = 34 → Reduce
+- **Freelance Platforms** — Consistent inflow → Reliable user verification
+- **Remittance Apps** — Detect behavior patterns for better allocation
+- **Marketplaces** — Enable flexible payments for trusted users
 
 ---
 
@@ -312,30 +169,6 @@ This ensures:
 
 ---
 
-## Project Structure
-
-```
-FluxID/
-├── frontend/           # Next.js PWA
-│   ├── app/
-│   │   ├── dashboard/   # Main analysis
-│   │   ├── analytics/  # Flow charts
-│   │   ├── transactions/ # History
-│   │   ├── insights/   # AI explanations
-│   │   └── agent/     # Agent demo
-│   ├── components/     # UI components
-│   └── lib/          # Scoring + agent
-├── backend/           # Node.js scoring
-│   ├── src/
-│   │   ├── routes/     # API endpoints
-│   │   ├── services/   # Horizon + AI
-│   │   └── utils/     # Scoring
-├── smartcontract/     # Soroban contracts
-└── docs/            # Documentation
-```
-
----
-
 ## Getting Started
 
 ```bash
@@ -348,6 +181,18 @@ cd backend && npm install && npm run dev
 
 ---
 
+## Project Structure
+
+```
+FluxID/
+├── frontend/           # Next.js PWA
+├── backend/           # Node.js scoring
+├── smartcontract/    # Soroban contracts
+└── docs/             # Documentation
+```
+
+---
+
 ## Key Links
 
 - [Frontend](https://github.com/StellarVhibes/FluxID/tree/main/frontend)
@@ -356,90 +201,7 @@ cd backend && npm install && npm run dev
 
 ---
 
-## Post-MVP Roadmap
-
-### Overview
-
-After MVP, FluxID evolves from:
-
-- **Scoring one wallet**
-
-to:
-
-- **Understanding entire user bases**
-
-> **Protocol Intelligence Layer**
-
-FluxID becomes a system for analyzing groups of wallets using trust scores.
-
----
-
-### 1. User-Base Health Dashboard
-
-Platforms can monitor overall user quality.
-
-- Average score
-- Distribution (Low / Medium / High)
-- Score trends over time
-- Risk concentration
-
----
-
-### 2. Cohort & Segmentation Engine
-
-Query wallets based on behavior.
-
-**Examples:**
-
-- Score > threshold
-- Monthly inflow > threshold
-- Interaction with contracts
-
-**Used for:**
-
-- Lead generation
-- Risk filtering
-- User targeting
-
----
-
-### 3. Risk Heatmaps
-
-Understand where risk is concentrated.
-
-- High-risk clusters
-- Risky counterparties
-- Transaction relationships
-
----
-
-### 4. Early Warning System
-
-Detect sudden changes in risk.
-
-- Score drops
-- Risk spikes
-- Behavioral anomalies
-
-**Example:**
-
-> "12% of users dropped below score 50 in 24 hours"
-
----
-
-### 5. AI Agent Layer
-
-Enable autonomous systems to:
-
-- Query scores
-- Make decisions
-- Pay per request (X402)
-
----
-
 ## Vision
-
-FluxID is building a new primitive:
 
 > **Liquidity Identity**
 
@@ -447,6 +209,4 @@ A real-time, behavior-based trust layer for financial systems.
 
 ---
 
-## Maintainers
-
-Project maintained by @bbkenny and @xqcxx
+*Built on Stellar by @bbkenny*
