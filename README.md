@@ -24,24 +24,31 @@ Instead of just showing balances, FluxID analyzes **how money behaves** — infl
 
 ```mermaid
 graph TD
-    User((User)) -->|enter address| IB[Input Bar]
-    IB -->|analyze| FE[Frontend Next.js]
-    
-    subgraph "Backend - Scoring Engine"
-        FE -->|API request| BE[Backend Node.js]
-        BE -->|fetch transactions| HR[Horizon API]
-        HR -->|payments| BE
-        BE -->|score + analyze| AI[Claude AI]
-        AI -->|insights| BE
-    end
-    
-    BE -->|score + insights| FE
-    FE -->|display| Dashboard
+    User["User"] -->|enters address| FE["Frontend Next.js"]
+    FE -->|API request| BE["Backend Node.js"]
+    BE -->|fetch transactions| HR["Horizon API"]
+    HR -->|payments| BE
+    BE -->|calculate| SC["Scoring Engine"]
+    SC -->|analyze| AI["Claude AI"]
+    AI -->|insights| SC
+    SC -->|score + insights| BE
+    BE -->|response| FE
+    FE -->|display| Dash["Dashboard"]
     
     subgraph "Optional On-Chain"
-        BE -->|publish score| SC[Soroban Contract]
+        BE -->|publish score| SC2["Soroban Contract"]
     end
 ```
+
+### Data Flow
+
+1. **User** enters Stellar wallet address in frontend
+2. **Frontend** sends request to backend API
+3. **Backend** fetches transactions via Stellar Horizon
+4. **Scoring Engine** calculates liquidity score (0-100) and risk level
+5. **Claude AI** analyzes patterns and generates behavior insights
+6. **Frontend** displays score, risk, and AI insights
+7. **Optional**: Score stored on Soroban for on-chain verification
 
 ---
 
