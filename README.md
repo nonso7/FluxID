@@ -11,11 +11,11 @@
 
 FluxID is a liquidity intelligence layer built on **Stellar** that turns any wallet into a real-time financial identity.
 
-Instead of just showing balances, FluxID analyzes **how money behaves** — inflow patterns, outflow stability, transaction frequency, and flow consistency — and produces a simple, explainable trust score.
+Instead of just showing balances, FluxID analyzes **how money behaves**, inflow patterns, outflow stability, transaction frequency, and flow consistency and produces a simple, explainable trust score.
 
 > **The Problem:** Traditional finance and crypto both track what you have, but not how you behave financially. Trust becomes guesswork.
 > 
-> **FluxID's Solution:** A dynamic Liquidity Identity — analyze any Stellar wallet address without permission, get a 0-100 trust score with risk level, and understand why through AI-generated insights.
+> **FluxID's Solution:** A dynamic Liquidity Identity, that analyze any Stellar wallet address without permission, get a 0-100 trust score with risk level, and understand why through AI-generated insights.
 
 ---
 
