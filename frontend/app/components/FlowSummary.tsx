@@ -1,8 +1,11 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { AssetsBreakdown, FlowSummary as FlowSummaryType, UsdValuation } from "../../lib/scoring";
 import { ArrowDownLeft, ArrowUpRight, Activity, Coins } from "lucide-react";
+
+const COINGECKO_URL = "https://api.coingecko.com/api/v3/simple/price?ids=stellar&vs_currencies=usd";
 
 interface FlowSummaryProps {
   data: FlowSummaryType | null;
@@ -20,6 +23,18 @@ function formatUsd(n: number): string {
   return `$${n.toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}`;
 }
 
+// Fetch XLM price from CoinGecko (frontend fallback)
+async function fetchXlmPrice(): Promise<number | null> {
+  try {
+    const res = await fetch(COINGECKO_URL, { signal: AbortSignal.timeout(4000) });
+    if (!res.ok) return null;
+    const data = (await res.json()) as { stellar?: { usd?: number } };
+    return data?.stellar?.usd ?? null;
+  } catch {
+    return null;
+  }
+}
+
 function directionCaption(dir: { XLM: number; USDC: number; other: unknown[] }): string {
   const parts: string[] = [];
   if (dir.XLM > 0) parts.push(`${formatAmount(dir.XLM)} XLM`);
@@ -35,6 +50,15 @@ function directionCaption(dir: { XLM: number; USDC: number; other: unknown[] }):
 }
 
 export default function FlowSummary({ data, assets, usd, isLoading, className = "" }: FlowSummaryProps) {
+  const [frontendPrice, setFrontendPrice] = useState<number | null>(null);
+
+  // Fetch XLM price from frontend if backend didn't provide it
+  useEffect(() => {
+    if (!usd?.xlmPriceUsd && assets) {
+      fetchXlmPrice().then(setFrontendPrice);
+    }
+  }, [usd?.xlmPriceUsd, assets]);
+
   if (isLoading) {
     return (
       <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 ${className}`}>
@@ -47,21 +71,28 @@ export default function FlowSummary({ data, assets, usd, isLoading, className = 
 
   if (!data) return null;
 
-  const hasUsd = Boolean(usd && (usd.inflow !== null || usd.outflow !== null));
+  // Use backend price, or fallback to frontend-fetched price
+  const xlmPrice = usd?.xlmPriceUsd ?? frontendPrice;
+  const hasPrice = xlmPrice !== null;
+
+  // Calculate USD totals using the price
+  let inflowUsd: number | null = null;
+  let outflowUsd: number | null = null;
+  
+  if (hasPrice && assets) {
+    inflowUsd = assets.inflow.XLM * xlmPrice + assets.inflow.USDC;
+    outflowUsd = assets.outflow.XLM * xlmPrice + assets.outflow.USDC;
+  }
+
+  const hasUsd = hasPrice && assets && (inflowUsd !== null || outflowUsd !== null);
   const inflowCaption = assets ? directionCaption(assets.inflow) : `${formatAmount(data.totalInflow)} (mixed)`;
   const outflowCaption = assets ? directionCaption(assets.outflow) : `${formatAmount(data.totalOutflow)} (mixed)`;
 
-  const inflowPrimary =
-    hasUsd && usd?.inflow !== null && usd?.inflow !== undefined
-      ? formatUsd(usd.inflow)
-      : inflowCaption;
-  const outflowPrimary =
-    hasUsd && usd?.outflow !== null && usd?.outflow !== undefined
-      ? formatUsd(usd.outflow)
-      : outflowCaption;
+  const inflowPrimary = hasUsd && inflowUsd !== null ? formatUsd(inflowUsd) : inflowCaption;
+  const outflowPrimary = hasUsd && outflowUsd !== null ? formatUsd(outflowUsd) : outflowCaption;
 
   // For inflow/outflow - show USD as primary, XLM/USDC breakdown as caption
-  const inflowColor = hasUsd && usd?.inflow !== null && usd?.inflow !== undefined ? "#22c55e" : "var(--foreground)";
+  const inflowColor = hasUsd && inflowUsd !== null ? "#22c55e" : "var(--foreground)";
   const outflowColor = hasUsd && usd?.outflow !== null && usd?.outflow !== undefined ? "#ef4444" : "var(--foreground)";
 
   const stats = [
@@ -71,7 +102,7 @@ export default function FlowSummary({ data, assets, usd, isLoading, className = 
       caption: inflowCaption,
       icon: ArrowDownLeft,
       color: inflowColor,
-      isPrimaryUsd: hasUsd && usd?.inflow !== null && usd?.inflow !== undefined,
+      isPrimaryUsd: hasUsd && inflowUsd !== null,
     },
     {
       label: "Total Outflow",
@@ -79,7 +110,7 @@ export default function FlowSummary({ data, assets, usd, isLoading, className = 
       caption: outflowCaption,
       icon: ArrowUpRight,
       color: outflowColor,
-      isPrimaryUsd: hasUsd && usd?.outflow !== null && usd?.outflow !== undefined,
+      isPrimaryUsd: hasUsd && outflowUsd !== null,
     },
     {
       label: "Transactions",
@@ -92,11 +123,11 @@ export default function FlowSummary({ data, assets, usd, isLoading, className = 
     {
       label: "Assets",
       primary: assets ? assetCountLabel(assets) : "—",
-      caption: usd?.xlmPriceUsd
-        ? `XLM = ${formatUsd(usd.xlmPriceUsd)}`
-        : usd
-          ? "XLM price unavailable"
-          : null,
+      caption: xlmPrice
+        ? `XLM = ${formatUsd(xlmPrice)}`
+        : frontendPrice
+          ? `XLM = ${formatUsd(frontendPrice)}`
+          : "XLM price unavailable",
       icon: Coins,
       color: "var(--foreground)",
       isPrimaryUsd: false,
