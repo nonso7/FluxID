@@ -49,7 +49,7 @@ export default function Dashboard() {
         Liquidity Score
       </h1>
       <p style={{ color: "var(--foreground-muted)", fontSize: 14 }} className="mb-6">
-        Summary view — enter any address above. Use the sidebar for full charts, transactions, and insights.
+        Enter a wallet address to get its liquidity score and understand its financial behavior instantly.
       </p>
 
       {error && (
