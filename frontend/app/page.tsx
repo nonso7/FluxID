@@ -89,9 +89,8 @@ export default function Home() {
             style={{ color: "var(--foreground-muted)", lineHeight: 1.65 }}
             className="text-xl mb-5 max-w-lg"
           >
-            Not just balances… Not just transactions… See how money actually behaves.
-            <br /><br />
-            Paste a wallet. Get a score. That's it.
+            FluxID turns any Stellar wallet into a real-time financial identity.
+            Understand how money behaves, not just how much it holds.
           </motion.p>
 
           {/* Flow chips */}
