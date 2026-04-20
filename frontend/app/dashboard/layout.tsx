@@ -4,7 +4,6 @@ import { ReactNode } from "react";
 import Header from "@/app/components/Header";
 import Sidebar from "@/app/components/Sidebar";
 import { AnalysisProvider } from "./context/AnalysisContext";
-import AnalyzeBar from "./components/AnalyzeBar";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
@@ -24,7 +23,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             }}
             className="h-full w-full overflow-auto p-6"
           >
-            <AnalyzeBar />
             {children}
           </div>
         </div>

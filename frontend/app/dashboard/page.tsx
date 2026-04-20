@@ -8,6 +8,7 @@ import OnChainBadge from "../components/OnChainBadge";
 import { ScoreSkeleton } from "../components/Skeletons";
 import Onboarding from "../components/Onboarding";
 import { useAnalysis } from "./context/AnalysisContext";
+import AnalyzeBar from "./components/AnalyzeBar";
 
 const item: Variants = {
   hidden: { opacity: 0, y: 12 },
@@ -43,6 +44,7 @@ export default function Dashboard() {
 
   return (
     <>
+      <AnalyzeBar />
       <h1 style={{ color: "var(--foreground)", letterSpacing: "-0.03em" }} className="text-3xl font-black mb-2">
         Liquidity Score
       </h1>
