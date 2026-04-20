@@ -110,12 +110,17 @@ export interface WalletAnalysis {
 
 type PaymentRecord = {
   id: string;
+  type?: string;
   from: string;
   to: string;
   amount: string;
   asset_type: string;
   asset_code?: string;
   asset_issuer?: string;
+  source_amount?: string;
+  source_asset_type?: string;
+  source_asset_code?: string;
+  source_asset_issuer?: string;
   created_at: string;
   transaction_successful?: boolean;
 };
@@ -312,26 +317,37 @@ export function calculateLiquidityScore(metrics: LiquidityMetrics): LiquiditySco
   };
 }
 
+function assetCodeOf(
+  assetType: string | undefined,
+  code: string | undefined
+): string {
+  if (!assetType || assetType === "native") return "XLM";
+  return code ?? "";
+}
+
 function buildSwapTransactions(
   swapPayments: PaymentRecord[],
   walletAddress: string
 ): TransactionData[] {
   return swapPayments.map((p) => {
-    const asset =
+    const toAsset = assetCodeOf(p.asset_type, p.asset_code);
+    const fromAsset = assetCodeOf(p.source_asset_type, p.source_asset_code);
+    const toAmount = parseFloat(p.amount) || 0;
+    const fromAmount = parseFloat(p.source_amount ?? p.amount) || 0;
+    const assetLabel =
       p.asset_type === "native" ? "XLM" : `${p.asset_code ?? ""}:${p.asset_issuer ?? ""}`;
-    const amount = parseFloat(p.amount) || 0;
     return {
       id: p.id,
       date: new Date(p.created_at).toISOString().split("T")[0],
-      amount,
+      amount: toAmount,
       type: "swap" as const,
       address: p.from === walletAddress ? p.to : p.from,
-      asset,
+      asset: assetLabel,
       swapDetails: {
-        fromAsset: "XLM",
-        toAsset: asset,
-        fromAmount: amount,
-        toAmount: amount,
+        fromAsset,
+        toAsset,
+        fromAmount,
+        toAmount,
       },
     };
   });
