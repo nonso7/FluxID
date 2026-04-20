@@ -219,8 +219,10 @@ export default function Home() {
               transition={{ duration: 0.5, delay: i * 0.12 }}
               whileHover={{ y: -6, transition: { duration: 0.22, ease: "easeOut" } }}
               style={{
-                background: "var(--card)",
-                border: "1px solid var(--border)",
+                background: "rgba(24, 27, 12, 0.65)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
                 position: "relative",
                 overflow: "hidden",
               }}
@@ -230,7 +232,7 @@ export default function Home() {
               <span className="pill pill-primary text-[10px] mb-3 inline-block">{tag}</span>
 
               {/* Icon and title row */}
-              <div className="flex items-start gap-3 mb-3">
+              <div className="flex items-center gap-3 mb-3">
                 <div 
                   className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
                   style={{ background: "transparent", border: "1px solid var(--border)" }}
