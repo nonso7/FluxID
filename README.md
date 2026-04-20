@@ -209,4 +209,11 @@ A real-time, behavior-based trust layer for financial systems.
 
 ---
 
+## Live Demo
+
+- 🌐 **Live App:** [https://fluxid.vercel.app/](https://fluxid.vercel.app/)
+- 📊 **Pitch Deck:** [View Presentation](https://docs.google.com/presentation/d/1RkhWXOQRWWKaiUFeHB_PFUDzVjQmw2m8/edit?usp=sharing&ouid=111174088021239989424&rtpof=true&sd=true)
+
+---
+
 *Built on Stellar by @bbkenny*
