@@ -93,27 +93,7 @@ export default function Home() {
             Understand how money behaves, not just how much it holds.
           </motion.p>
 
-          {/* Flow chips */}
-          <motion.div variants={item} className="flex flex-wrap items-center gap-2 mb-6">
-            {[
-              { icon: Wallet, label: "Wallet Input" },
-              { icon: Layers, label: "0-100 Score" },
-              { icon: Cpu, label: "Risk Insight" },
-            ].map(({ icon: Icon, label }, i, arr) => (
-              <div key={label} className="flex items-center gap-2">
-                <div
-                  style={{ background: "var(--card)", border: "1px solid var(--border)", color: "var(--foreground-muted)" }}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold"
-                >
-                  <Icon size={11} style={{ color: "var(--primary)" }} />
-                  {label}
-                </div>
-                {i < arr.length - 1 && (
-                  <ArrowRight size={13} style={{ color: "var(--primary)", opacity: 0.6 }} />
-                )}
-              </div>
-            ))}
-          </motion.div>
+          
 
           {/* CTA */}
           <motion.div variants={item} className="flex flex-wrap gap-3">
@@ -253,9 +233,9 @@ export default function Home() {
               <div className="flex items-start gap-3 mb-3">
                 <div 
                   className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
-                  style={{ background: "var(--primary)" }}
+                  style={{ background: "transparent", border: "1px solid var(--border)" }}
                 >
-                  <Icon size={18} style={{ color: "var(--background)" }} />
+                  <Icon size={18} style={{ color: "var(--primary)" }} />
                 </div>
                 <h3
                   style={{ color: "var(--foreground)", fontWeight: 800, fontSize: 17, letterSpacing: "-0.02em" }}
