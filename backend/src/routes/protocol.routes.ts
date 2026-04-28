@@ -7,6 +7,9 @@ import {
   getCohorts,
   getHealthMetrics,
   getRiskHeatmap,
+  getSegments,
+  type SegmentActivity,
+  type SegmentQuery,
 } from '../services/protocol.service.js';
 
 const DEFAULT_NETWORK = appConfig.stellarNetwork;
@@ -15,6 +18,38 @@ interface ProtocolQuery {
   network?: string;
   windowHours?: string;
   lookbackHours?: string;
+}
+
+interface SegmentsQuery extends ProtocolQuery {
+  minScore?: string;
+  maxScore?: string;
+  risk?: string;
+  activity?: string;
+  consistent?: string;
+  limit?: string;
+}
+
+function parseScoreBound(input: string | undefined): number | undefined {
+  if (input === undefined) return undefined;
+  const n = parseInt(input, 10);
+  if (!Number.isFinite(n)) return undefined;
+  return Math.max(0, Math.min(100, n));
+}
+
+function parseRisk(input: string | undefined): SegmentQuery['risk'] | undefined {
+  if (input === 'Low' || input === 'Medium' || input === 'High') return input;
+  return undefined;
+}
+
+function parseActivity(input: string | undefined): SegmentActivity | undefined {
+  if (input === 'low' || input === 'medium' || input === 'high') return input;
+  return undefined;
+}
+
+function parseBool(input: string | undefined): boolean | undefined {
+  if (input === 'true') return true;
+  if (input === 'false') return false;
+  return undefined;
 }
 
 function parsePositiveInt(input: string | undefined, fallback: number, max = 24 * 365): number {
@@ -66,6 +101,29 @@ export async function registerProtocolRoutes(fastify: FastifyInstance) {
       } catch (error) {
         const err = error as Error;
         logger.error({ error: err }, 'Protocol risk-heatmap route failed');
+        return reply.code(400).send({ success: false, error: err.message });
+      }
+    }
+  );
+
+  fastify.get(
+    '/protocol/segments',
+    async (request: FastifyRequest<{ Querystring: SegmentsQuery }>, reply: FastifyReply) => {
+      try {
+        const network = validateNetwork(request.query.network ?? DEFAULT_NETWORK);
+        const criteria: SegmentQuery = {
+          minScore: parseScoreBound(request.query.minScore),
+          maxScore: parseScoreBound(request.query.maxScore),
+          risk: parseRisk(request.query.risk),
+          activity: parseActivity(request.query.activity),
+          consistent: parseBool(request.query.consistent),
+          limit: parsePositiveInt(request.query.limit, 100, 500),
+        };
+        const data = await getSegments(network, criteria);
+        return reply.send({ success: true, data });
+      } catch (error) {
+        const err = error as Error;
+        logger.error({ error: err }, 'Protocol segments route failed');
         return reply.code(400).send({ success: false, error: err.message });
       }
     }

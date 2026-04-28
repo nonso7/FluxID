@@ -209,6 +209,100 @@ export async function getRiskHeatmap(
   return { network, bands };
 }
 
+export type SegmentActivity = 'low' | 'medium' | 'high';
+
+export interface SegmentQuery {
+  minScore?: number;
+  maxScore?: number;
+  risk?: RiskLevel;
+  activity?: SegmentActivity;
+  consistent?: boolean;
+  limit?: number;
+}
+
+export interface SegmentWallet {
+  wallet: string;
+  score: number;
+  risk: RiskLevel;
+  observations: number;
+  activity: SegmentActivity;
+  consistent: boolean;
+  scoreRange: number;
+  firstSeenAt: string;
+  lastSeenAt: string;
+}
+
+export interface SegmentResult {
+  network: NetworkType;
+  criteria: SegmentQuery;
+  total: number;
+  returned: number;
+  wallets: SegmentWallet[];
+}
+
+function activityFor(observationCount: number): SegmentActivity {
+  if (observationCount >= 4) return 'high';
+  if (observationCount >= 2) return 'medium';
+  return 'low';
+}
+
+export async function getSegments(
+  network: NetworkType,
+  query: SegmentQuery = {}
+): Promise<SegmentResult> {
+  const limit = Math.max(1, Math.min(query.limit ?? 100, 500));
+  const all = await getAllScoreHistory({ network });
+
+  const byWallet = new Map<string, ScoreHistoryEntry[]>();
+  for (const e of all) {
+    const arr = byWallet.get(e.wallet) ?? [];
+    arr.push(e);
+    byWallet.set(e.wallet, arr);
+  }
+
+  const matches: SegmentWallet[] = [];
+  for (const [wallet, entries] of byWallet) {
+    entries.sort((a, b) => b.timestamp - a.timestamp);
+    const latest = entries[0];
+    const oldest = entries[entries.length - 1];
+
+    if (query.minScore !== undefined && latest.score < query.minScore) continue;
+    if (query.maxScore !== undefined && latest.score > query.maxScore) continue;
+    if (query.risk && latest.risk !== query.risk) continue;
+
+    const activity = activityFor(entries.length);
+    if (query.activity && activity !== query.activity) continue;
+
+    const consistent = entries.length >= 2 && entries.every((e) => e.risk === latest.risk);
+    if (query.consistent !== undefined && consistent !== query.consistent) continue;
+
+    const scores = entries.map((e) => e.score);
+    const scoreRange = scores.length > 1 ? Math.max(...scores) - Math.min(...scores) : 0;
+
+    matches.push({
+      wallet,
+      score: latest.score,
+      risk: latest.risk,
+      observations: entries.length,
+      activity,
+      consistent,
+      scoreRange,
+      firstSeenAt: new Date(oldest.timestamp).toISOString(),
+      lastSeenAt: new Date(latest.timestamp).toISOString(),
+    });
+  }
+
+  matches.sort((a, b) => b.score - a.score);
+
+  return {
+    network,
+    criteria: query,
+    total: matches.length,
+    returned: Math.min(matches.length, limit),
+    wallets: matches.slice(0, limit),
+  };
+}
+
 export interface ProtocolAlert {
   id: string;
   title: string;

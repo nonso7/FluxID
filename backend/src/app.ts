@@ -36,6 +36,8 @@ export async function buildServer() {
       mcpInvoke: 'POST /mcp/tools/call  body: { name, arguments }',
       protocolHealth: 'GET /protocol/health?network=&windowHours=',
       protocolCohorts: 'GET /protocol/cohorts?network=',
+      protocolSegments:
+        'GET /protocol/segments?network=&minScore=&maxScore=&risk=Low|Medium|High&activity=low|medium|high&consistent=true|false&limit=',
       protocolRiskHeatmap: 'GET /protocol/risk-heatmap?network=',
       protocolAlerts: 'GET /protocol/alerts?network=&lookbackHours=',
     },

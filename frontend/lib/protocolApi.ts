@@ -43,6 +43,37 @@ export interface ProtocolAlert {
   generatedAt: string;
 }
 
+export type SegmentActivity = "low" | "medium" | "high";
+
+export interface SegmentQuery {
+  minScore?: number;
+  maxScore?: number;
+  risk?: "Low" | "Medium" | "High";
+  activity?: SegmentActivity;
+  consistent?: boolean;
+  limit?: number;
+}
+
+export interface SegmentWallet {
+  wallet: string;
+  score: number;
+  risk: "Low" | "Medium" | "High";
+  observations: number;
+  activity: SegmentActivity;
+  consistent: boolean;
+  scoreRange: number;
+  firstSeenAt: string;
+  lastSeenAt: string;
+}
+
+export interface SegmentResult {
+  network: ProtocolNetwork;
+  criteria: SegmentQuery;
+  total: number;
+  returned: number;
+  wallets: SegmentWallet[];
+}
+
 interface ApiEnvelope<T> {
   success: boolean;
   data?: T;
@@ -86,4 +117,31 @@ export function fetchProtocolAlerts(network?: ProtocolNetwork) {
     "protocol/alerts",
     network
   );
+}
+
+export async function fetchProtocolSegments(
+  query: SegmentQuery = {},
+  network?: ProtocolNetwork
+): Promise<SegmentResult | null> {
+  if (!AI_BACKEND_URL) return null;
+  const url = new URL(
+    "protocol/segments",
+    AI_BACKEND_URL.endsWith("/") ? AI_BACKEND_URL : AI_BACKEND_URL + "/"
+  );
+  if (network) url.searchParams.set("network", network);
+  if (query.minScore !== undefined) url.searchParams.set("minScore", String(query.minScore));
+  if (query.maxScore !== undefined) url.searchParams.set("maxScore", String(query.maxScore));
+  if (query.risk) url.searchParams.set("risk", query.risk);
+  if (query.activity) url.searchParams.set("activity", query.activity);
+  if (query.consistent !== undefined) url.searchParams.set("consistent", String(query.consistent));
+  if (query.limit) url.searchParams.set("limit", String(query.limit));
+
+  try {
+    const res = await fetch(url.toString());
+    const body = (await res.json()) as ApiEnvelope<SegmentResult>;
+    if (!body.success || !body.data) return null;
+    return body.data;
+  } catch {
+    return null;
+  }
 }
