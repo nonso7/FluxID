@@ -385,6 +385,8 @@ FluxID is structured across three definitive phases. This ensures we deliver on 
   - **API-first infrastructure**: Infrastructure-as-a-Service for trust signaling.
   - **X402 agentic payments**: Machine-to-machine financial primitives.
 
+   **Phase 2.5: Scale (Protocol Intelligence - Advance)**
+
 
 - 🔮 **Phase 3: Outcome (Internet of Value) — UPCOMING (FINAL PHASE)**
   Establishing global credit primitives and decentralized reputation.
@@ -573,6 +575,34 @@ This allows AI agents and backend services to directly interact with FluxID for 
 - Enables real-time, automated financial decisions
 - Positions FluxID as a foundational data layer for intelligent systems
 
+
+### Scalable Protocol Sync Engine (Advanced)”
+
+To support real-world protocol integrations, FluxID will introduce a background synchronization system that enables full user-base analysis.
+
+Instead of relying on partial or manually supplied wallet lists, this system will:
+
+ - Automatically discover wallets interacting with a given contract
+ - Score wallets asynchronously using existing scoring logic
+ - Cache results and update them on a defined interval (TTL)
+ - Provide real-time sync progress for transparency
+
+  Key Capabilities
+  - Contract → Wallet Enumeration (via Horizon)
+  - Background job processing (non-blocking)
+  - Incremental scoring (only new or stale wallets)
+  - Progress tracking for UI feedback
+  - Cached aggregation for fast queries
+  - Why this matters
+
+This enables:
+
+- True protocol-level insights (not samples)
+- Accurate health metrics across entire user bases
+- Production-grade integrations for lending, marketplaces, and agents
+Implementation Note
+
+This is an advanced extension of Phase 2 and will be introduced incrementally to balance performance, cost, and development complexity.
 ---
 
 ## Strategic Positioning

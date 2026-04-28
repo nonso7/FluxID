@@ -215,6 +215,8 @@ FluxID is being executed in three distinct phases. We keep our word and deliver 
   - **API-first infrastructure**: Programmable trust signals for developers and platforms.
   - **X402 agentic payments**: Enabling AI agents to pay for intelligence on-chain.
 
+  and  **Scalable Protocol Sync Engine (Advanced)** that introduces a background synchronization system that enables full user-base analysis.
+
 
 - 🔮 **Phase 3: Outcome (Internet of Value) — UPCOMING (FINAL PHASE)**
   Our ultimate vision is to establish decentralized reputation and cross-chain trust signals as a global credit primitive.
@@ -233,6 +235,9 @@ After Phase 1 (MVP), FluxID evolves from scoring one wallet to understanding ent
 2. **Cohort & Segmentation Engine** — Query wallets by behavior (score > threshold, inflow > threshold)
 3. **Risk Heatmaps** — Visualize where risk is concentrated
 4. **Early Warning System** — Detect sudden changes in risk (e.g., "12% dropped below 50 in 24h")
+
+### Scalable Protocol Sync Engine (Advanced)”
+To support real-world protocol integrations, FluxID will introduce a background synchronization system that enables full user-base analysis.
 
 ---
 
