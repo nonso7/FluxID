@@ -101,7 +101,7 @@ export default function FlowSummary({ data, assets, usd, isLoading, className = 
   const swapsLabel = data.swaps && data.swaps.length > 0
     ? data.swaps
         .map((s) => {
-          const pair = `${s.fromAsset} → ${s.toAsset.split(":")[0]}`;
+          const pair = `${s.fromAsset} → ${s.toAsset}`;
           return showSwapCounts ? `${pair} (${s.count})` : pair;
         })
         .join(" · ")

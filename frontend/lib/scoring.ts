@@ -239,12 +239,11 @@ export function calculateLiquidityMetrics(
 
     const toAmount = parseFloat(p.amount) || 0;
     const fromAmount = parseFloat(p.source_amount ?? p.amount) || 0;
-    const toAsset =
-      p.asset_type === "native" ? "XLM" : `${p.asset_code ?? ""}:${p.asset_issuer ?? ""}`;
-    const fromAsset =
-      !p.source_asset_type || p.source_asset_type === "native"
-        ? "XLM"
-        : `${p.source_asset_code ?? ""}:${p.source_asset_issuer ?? ""}`;
+    // Aggregate by asset symbol only (not issuer) so the Conversions caption
+    // shows "USDC → XLM" rather than "USDC:GA5Z…GFAW → XLM". The issuer is
+    // metadata that doesn't belong in display labels.
+    const toAsset = assetCodeOf(p.asset_type, p.asset_code);
+    const fromAsset = assetCodeOf(p.source_asset_type, p.source_asset_code);
     const key = `${fromAsset}→${toAsset}`;
 
     const existing = swapMap.get(key);

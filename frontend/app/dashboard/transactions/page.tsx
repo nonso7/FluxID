@@ -172,7 +172,7 @@ export default function TransactionsPage() {
                             <>
                               ⇄ {formatAmount(tx.swapDetails.fromAmount)} {tx.swapDetails.fromAsset}
                               {" → "}
-                              {formatAmount(tx.swapDetails.toAmount)} {tx.swapDetails.toAsset.split(":")[0]}
+                              {formatAmount(tx.swapDetails.toAmount)} {tx.swapDetails.toAsset}
                             </>
                           ) : (
                             <>
@@ -182,7 +182,9 @@ export default function TransactionsPage() {
                           )}
                         </td>
                         <td className="px-5 py-3 text-right" style={{ color: "var(--foreground-muted)", fontSize: 12 }}>
-                          {tx.type === "swap" ? "—" : assetLabel(tx.asset)}
+                          {tx.type === "swap" && tx.swapDetails
+                            ? `${tx.swapDetails.fromAsset} → ${tx.swapDetails.toAsset}`
+                            : assetLabel(tx.asset)}
                         </td>
                       </motion.tr>
                     ))}
