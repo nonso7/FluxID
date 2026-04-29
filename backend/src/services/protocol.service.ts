@@ -106,7 +106,7 @@ export interface Cohort {
 }
 
 const VOLATILITY_THRESHOLD = 15;
-const STEADY_MIN_OBSERVATIONS = 2;
+const DORMANT_DAYS = 7;
 
 export async function getCohorts(network: NetworkType): Promise<{ network: NetworkType; cohorts: Cohort[] }> {
   const all = await getAllProtocolHistory({ network });
@@ -119,27 +119,36 @@ export async function getCohorts(network: NetworkType): Promise<{ network: Netwo
 
   let highTrust = 0;
   let steady = 0;
-  let volatile = 0;
+  let atRisk = 0;
   let dormant = 0;
   const now = Date.now();
+  const dormantCutoff = DORMANT_DAYS * DAY_MS;
 
   for (const [, entries] of byWallet) {
     entries.sort((a, b) => b.timestamp - a.timestamp);
     const latest = entries[0];
 
+    // High Trust: top scores. Works on the first upload.
     if (latest.score >= 75) highTrust++;
 
-    if (entries.length >= STEADY_MIN_OBSERVATIONS && entries.every((e) => e.risk === 'Low')) {
-      steady++;
-    }
+    // Steady Earners: currently at Low risk. With multi-observation data this
+    // doubles as "consistently low risk"; with a single observation it
+    // accurately reflects the wallet's current standing.
+    if (latest.risk === 'Low') steady++;
 
+    // At Risk: currently at High risk OR — when we have multi-observation data —
+    // a meaningful score swing across observations. The OR keeps the cohort
+    // populated from upload time and richer once history accrues.
+    const isCurrentlyHighRisk = latest.risk === 'High';
+    let hasVolatileSwing = false;
     if (entries.length >= 2) {
       const scores = entries.map((e) => e.score);
-      const range = Math.max(...scores) - Math.min(...scores);
-      if (range >= VOLATILITY_THRESHOLD) volatile++;
+      hasVolatileSwing = Math.max(...scores) - Math.min(...scores) >= VOLATILITY_THRESHOLD;
     }
+    if (isCurrentlyHighRisk || hasVolatileSwing) atRisk++;
 
-    if (now - latest.timestamp > 7 * DAY_MS) dormant++;
+    // Dormant: no observation in the last DORMANT_DAYS.
+    if (now - latest.timestamp > dormantCutoff) dormant++;
   }
 
   const cohorts: Cohort[] = [
@@ -155,21 +164,21 @@ export async function getCohorts(network: NetworkType): Promise<{ network: Netwo
       name: 'Steady Earners',
       count: steady,
       color: '#22c55e',
-      description: 'Multiple observations, all at Low risk.',
+      description: 'Wallets currently classified as Low risk.',
     },
     {
-      id: 'high-volatility',
-      name: 'High Volatility',
-      count: volatile,
+      id: 'at-risk',
+      name: 'At Risk',
+      count: atRisk,
       color: '#eab308',
-      description: `Score range across observations ≥ ${VOLATILITY_THRESHOLD}.`,
+      description: `Currently High risk, or score swing ≥ ${VOLATILITY_THRESHOLD} across observations.`,
     },
     {
       id: 'dormant',
       name: 'Dormant Wallets',
       count: dormant,
       color: 'var(--foreground-dim)',
-      description: 'No score updates in the last 7 days.',
+      description: `No score updates in the last ${DORMANT_DAYS} days.`,
     },
   ];
 

@@ -8,6 +8,7 @@ import EarlyWarningBanner from "../../components/EarlyWarningBanner";
 import {
   addProtocolWallets,
   fetchProtocolCohorts,
+  fetchProtocolHealth,
   fetchProtocolSegments,
   resetProtocolHistory,
   type AddWalletsResult,
@@ -44,6 +45,7 @@ export default function ProtocolDashboard() {
   const [uploadResult, setUploadResult] = useState<AddWalletsResult | null>(null);
   const [uploadLoading, setUploadLoading] = useState(false);
   const [resetting, setResetting] = useState(false);
+  const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -101,6 +103,77 @@ export default function ProtocolDashboard() {
     setResetting(false);
   };
 
+  const runExportReport = async () => {
+    setExporting(true);
+    try {
+      const [health, segments] = await Promise.all([
+        fetchProtocolHealth(),
+        fetchProtocolSegments({ limit: 500 }),
+      ]);
+      if (!health || !segments) {
+        alert("Could not fetch protocol data — make sure the backend is reachable.");
+        return;
+      }
+      if (segments.total === 0) {
+        alert("No protocol wallets to export. Add some wallets first.");
+        return;
+      }
+
+      const escape = (val: string | number | boolean): string => {
+        const s = String(val);
+        return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+      };
+
+      const lines: string[] = [];
+      lines.push("FluxID Protocol Intelligence Report");
+      lines.push(`Generated,${health.generatedAt}`);
+      lines.push(`Network,${health.network}`);
+      lines.push("");
+      lines.push("Summary");
+      lines.push(`Total Wallets,${health.totalWallets}`);
+      lines.push(`Average Score,${health.avgScore}`);
+      lines.push(`Low Risk %,${health.lowRiskPct}`);
+      lines.push(`High Risk Alerts,${health.highRiskAlerts}`);
+      lines.push(`Distribution Low,${health.distribution.low}`);
+      lines.push(`Distribution Medium,${health.distribution.medium}`);
+      lines.push(`Distribution High,${health.distribution.high}`);
+      lines.push("");
+      lines.push("Wallets");
+      lines.push(
+        "wallet,score,risk,observations,activity,consistent,scoreRange,firstSeenAt,lastSeenAt"
+      );
+      for (const w of segments.wallets) {
+        lines.push(
+          [
+            escape(w.wallet),
+            w.score,
+            w.risk,
+            w.observations,
+            w.activity,
+            w.consistent,
+            w.scoreRange,
+            escape(w.firstSeenAt),
+            escape(w.lastSeenAt),
+          ].join(",")
+        );
+      }
+
+      const csv = lines.join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      const stamp = new Date().toISOString().slice(0, 10);
+      link.download = `fluxid-protocol-${health.network}-${stamp}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <div className="max-w-[1400px] mx-auto">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
@@ -117,10 +190,12 @@ export default function ProtocolDashboard() {
         </div>
         <div className="flex items-center gap-3">
           <button
+            onClick={runExportReport}
+            disabled={exporting}
             className="btn btn-outline text-xs h-10 px-4 flex items-center gap-2"
-            style={{ borderRadius: 12 }}
+            style={{ borderRadius: 12, opacity: exporting ? 0.5 : 1 }}
           >
-            <Download size={14} /> Export Report
+            <Download size={14} /> {exporting ? "Exporting…" : "Export Report"}
           </button>
           <button
             onClick={() => setUploadOpen((v) => !v)}
