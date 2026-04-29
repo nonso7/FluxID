@@ -120,3 +120,20 @@ export async function getAllProtocolHistory(
     return true;
   });
 }
+
+export async function clearProtocolHistory(network?: NetworkType): Promise<number> {
+  await ensureDataDir();
+  const all = await readEntries(PROTOCOL_HISTORY_FILE);
+  if (all.length === 0) return 0;
+
+  if (!network) {
+    await fs.writeFile(PROTOCOL_HISTORY_FILE, '', 'utf8');
+    return all.length;
+  }
+
+  const kept = all.filter((entry) => entry.network !== network);
+  const removed = all.length - kept.length;
+  const content = kept.map((entry) => JSON.stringify(entry)).join('\n');
+  await fs.writeFile(PROTOCOL_HISTORY_FILE, kept.length === 0 ? '' : content + '\n', 'utf8');
+  return removed;
+}

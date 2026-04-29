@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { fetchProtocolRiskHeatmap, type ProtocolRiskBand } from "../../lib/protocolApi";
 
-export default function RiskHeatmap() {
+interface RiskHeatmapProps {
+  refreshKey?: number;
+}
+
+export default function RiskHeatmap({ refreshKey = 0 }: RiskHeatmapProps) {
   const [bands, setBands] = useState<ProtocolRiskBand[] | null>(null);
 
   useEffect(() => {
@@ -15,7 +19,7 @@ export default function RiskHeatmap() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [refreshKey]);
 
   const isLoading = bands === null;
   const isEmpty = !isLoading && bands.length === 0;

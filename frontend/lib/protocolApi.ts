@@ -119,6 +119,53 @@ export function fetchProtocolAlerts(network?: ProtocolNetwork) {
   );
 }
 
+export interface AddWalletsResult {
+  network: ProtocolNetwork;
+  requested: number;
+  scored: number;
+  failed: { wallet: string; reason: string }[];
+  durationMs: number;
+}
+
+export async function addProtocolWallets(
+  wallets: string[],
+  network: ProtocolNetwork
+): Promise<AddWalletsResult | null> {
+  if (!AI_BACKEND_URL) return null;
+  const url = AI_BACKEND_URL.endsWith("/")
+    ? `${AI_BACKEND_URL}protocol/wallets`
+    : `${AI_BACKEND_URL}/protocol/wallets`;
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ wallets, network }),
+    });
+    const body = (await res.json()) as ApiEnvelope<AddWalletsResult>;
+    if (!body.success || !body.data) return null;
+    return body.data;
+  } catch {
+    return null;
+  }
+}
+
+export async function resetProtocolHistory(
+  network?: ProtocolNetwork
+): Promise<{ removed: number; network: string } | null> {
+  if (!AI_BACKEND_URL) return null;
+  const base = AI_BACKEND_URL.endsWith("/") ? AI_BACKEND_URL : AI_BACKEND_URL + "/";
+  const url = new URL("protocol/wallets", base);
+  if (network) url.searchParams.set("network", network);
+  try {
+    const res = await fetch(url.toString(), { method: "DELETE" });
+    const body = (await res.json()) as ApiEnvelope<{ removed: number; network: string }>;
+    if (!body.success || !body.data) return null;
+    return body.data;
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchProtocolSegments(
   query: SegmentQuery = {},
   network?: ProtocolNetwork

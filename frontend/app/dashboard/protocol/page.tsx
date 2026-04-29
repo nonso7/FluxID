@@ -1,14 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Filter, Search, Download } from "lucide-react";
+import { Search, Download, Plus } from "lucide-react";
 import ProtocolMetrics from "../../components/ProtocolMetrics";
 import RiskHeatmap from "../../components/RiskHeatmap";
 import EarlyWarningBanner from "../../components/EarlyWarningBanner";
 import {
+  addProtocolWallets,
   fetchProtocolCohorts,
   fetchProtocolSegments,
+  resetProtocolHistory,
+  type AddWalletsResult,
   type ProtocolCohort,
+  type ProtocolNetwork,
   type SegmentActivity,
   type SegmentResult,
 } from "../../../lib/protocolApi";
@@ -22,6 +26,8 @@ function truncateWallet(addr: string, head = 6, tail = 4): string {
 }
 
 export default function ProtocolDashboard() {
+  const [refreshKey, setRefreshKey] = useState(0);
+
   const [cohorts, setCohorts] = useState<ProtocolCohort[] | null>(null);
   const [queryOpen, setQueryOpen] = useState(false);
   const [minScore, setMinScore] = useState<string>("");
@@ -32,6 +38,13 @@ export default function ProtocolDashboard() {
   const [segmentResult, setSegmentResult] = useState<SegmentResult | null>(null);
   const [segmentLoading, setSegmentLoading] = useState(false);
 
+  const [uploadOpen, setUploadOpen] = useState(false);
+  const [uploadNetwork, setUploadNetwork] = useState<ProtocolNetwork>("mainnet");
+  const [walletInput, setWalletInput] = useState("");
+  const [uploadResult, setUploadResult] = useState<AddWalletsResult | null>(null);
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [resetting, setResetting] = useState(false);
+
   useEffect(() => {
     let active = true;
     fetchProtocolCohorts().then((res) => {
@@ -40,7 +53,7 @@ export default function ProtocolDashboard() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [refreshKey]);
 
   const cohortsLoading = cohorts === null;
   const cohortMax = cohorts && cohorts.length > 0
@@ -60,6 +73,32 @@ export default function ProtocolDashboard() {
     });
     setSegmentResult(result);
     setSegmentLoading(false);
+  };
+
+  const runUpload = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const wallets = walletInput
+      .split(/[\s,]+/)
+      .map((w) => w.trim())
+      .filter(Boolean);
+    if (wallets.length === 0) return;
+    setUploadLoading(true);
+    setUploadResult(null);
+    const result = await addProtocolWallets(wallets, uploadNetwork);
+    setUploadResult(result);
+    setUploadLoading(false);
+    if (result && result.scored > 0) {
+      setRefreshKey((k) => k + 1);
+    }
+  };
+
+  const runReset = async () => {
+    if (!confirm("Reset protocol intelligence data? This clears all uploaded wallets.")) return;
+    setResetting(true);
+    await resetProtocolHistory();
+    setUploadResult(null);
+    setRefreshKey((k) => k + 1);
+    setResetting(false);
   };
 
   return (
@@ -84,24 +123,149 @@ export default function ProtocolDashboard() {
             <Download size={14} /> Export Report
           </button>
           <button
+            onClick={() => setUploadOpen((v) => !v)}
             className="btn btn-primary text-xs h-10 px-4 flex items-center gap-2"
             style={{ borderRadius: 12 }}
           >
-            <Filter size={14} /> Global Filters
+            <Plus size={14} /> {uploadOpen ? "Close" : "Add Wallets"}
           </button>
         </div>
       </div>
 
+      {uploadOpen && (
+        <form
+          onSubmit={runUpload}
+          className="mb-8 rounded-2xl"
+          style={{
+            background: "var(--card)",
+            border: "1px solid var(--border)",
+            padding: 20,
+          }}
+        >
+          <div className="flex items-center justify-between mb-3">
+            <h3
+              style={{ color: "var(--foreground)", fontWeight: 800, fontSize: 16 }}
+            >
+              Add Wallets to Protocol Intelligence
+            </h3>
+            <div
+              className="flex items-center p-0.5 rounded-lg"
+              style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+            >
+              {(["mainnet", "testnet"] as ProtocolNetwork[]).map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => setUploadNetwork(n)}
+                  style={{
+                    background: uploadNetwork === n ? "var(--primary)" : "transparent",
+                    color: uploadNetwork === n ? "var(--background)" : "var(--foreground-muted)",
+                    fontSize: 11,
+                    fontWeight: 700,
+                  }}
+                  className="px-3 py-1 rounded-md uppercase"
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+          </div>
+          <p
+            style={{ color: "var(--foreground-muted)", fontSize: 12 }}
+            className="mb-3"
+          >
+            Paste Stellar wallet addresses (one per line, or comma-separated). In production this happens via the{" "}
+            <code style={{ color: "var(--primary)" }}>POST /protocol/wallets</code> API; this is the same code path.
+          </p>
+          <textarea
+            value={walletInput}
+            onChange={(e) => setWalletInput(e.target.value)}
+            placeholder={"GBACI4PCHZQXZFAADCMG4TICARUDZAGF5CI3A4RPTD7SOSW2VPKLGDCX\nGAVA7FY3KBXJVZDBX254LPM53YXRUEVLM5BXMXZOC7ZIW3HXFP6LT4SR\n..."}
+            rows={6}
+            className="w-full px-3 py-2 rounded-lg font-mono"
+            style={{
+              background: "var(--surface)",
+              border: "1px solid var(--border)",
+              color: "var(--foreground)",
+              fontSize: 12,
+            }}
+          />
+          <div className="flex items-center gap-3 mt-3 flex-wrap">
+            <button
+              type="submit"
+              disabled={uploadLoading || walletInput.trim() === ""}
+              className="px-5 py-2 rounded-lg text-xs font-bold uppercase tracking-wider"
+              style={{
+                background: "var(--primary)",
+                color: "var(--background)",
+                opacity: uploadLoading || walletInput.trim() === "" ? 0.5 : 1,
+              }}
+            >
+              {uploadLoading ? "Scoring…" : "Score & Add"}
+            </button>
+            {uploadResult && (
+              <span style={{ color: "var(--foreground-muted)", fontSize: 12 }}>
+                Scored {uploadResult.scored}/{uploadResult.requested}
+                {uploadResult.failed.length > 0
+                  ? ` · ${uploadResult.failed.length} failed`
+                  : ""}
+                {" · "}
+                {(uploadResult.durationMs / 1000).toFixed(1)}s
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={runReset}
+              disabled={resetting}
+              className="ml-auto text-xs underline"
+              style={{
+                color: "var(--foreground-dim)",
+                opacity: resetting ? 0.4 : 1,
+              }}
+            >
+              {resetting ? "resetting…" : "reset protocol data"}
+            </button>
+          </div>
+          {uploadResult && uploadResult.failed.length > 0 && (
+            <div
+              className="mt-3 pt-3"
+              style={{ borderTop: "1px solid var(--border)" }}
+            >
+              <p
+                style={{ color: "var(--foreground-muted)", fontSize: 11, fontWeight: 700 }}
+                className="uppercase mb-2"
+              >
+                Failed
+              </p>
+              <div className="space-y-1 max-h-32 overflow-y-auto">
+                {uploadResult.failed.map((f) => (
+                  <div
+                    key={f.wallet}
+                    className="flex items-center justify-between text-xs font-mono"
+                    style={{ color: "var(--foreground-dim)" }}
+                  >
+                    <span className="truncate mr-2" title={f.wallet}>
+                      {truncateWallet(f.wallet)}
+                    </span>
+                    <span style={{ color: "#ef4444" }}>{f.reason}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </form>
+      )}
+
       {/* Early Warning System */}
-      <EarlyWarningBanner />
+      <EarlyWarningBanner refreshKey={refreshKey} />
 
       {/* High-Level Metrics */}
-      <ProtocolMetrics />
+      <ProtocolMetrics refreshKey={refreshKey} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* Risk Heatmap - 2/3 width */}
         <div className="lg:col-span-2">
-          <RiskHeatmap />
+          <RiskHeatmap refreshKey={refreshKey} />
         </div>
 
         {/* Cohort & Segmentation Engine - 1/3 width */}

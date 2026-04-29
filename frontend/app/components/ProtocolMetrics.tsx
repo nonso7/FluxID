@@ -29,7 +29,11 @@ function deltaParts(
   return { change, trend: isGood ? "up" : "down" };
 }
 
-export default function ProtocolMetrics() {
+interface ProtocolMetricsProps {
+  refreshKey?: number;
+}
+
+export default function ProtocolMetrics({ refreshKey = 0 }: ProtocolMetricsProps) {
   const [health, setHealth] = useState<ProtocolHealth | null>(null);
 
   useEffect(() => {
@@ -40,7 +44,7 @@ export default function ProtocolMetrics() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [refreshKey]);
 
   const avgScoreDelta = deltaParts(health?.delta.avgScore ?? null, "", true);
   const totalWalletsDelta = deltaParts(health?.delta.totalWallets ?? null, "", true);

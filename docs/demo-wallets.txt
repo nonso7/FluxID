@@ -1,0 +1,25 @@
+# FluxID Protocol Intelligence — demo wallet seed list
+#
+# Paste the addresses below into the "Add Wallets" panel on
+# /dashboard/protocol to populate the dashboard with real,
+# previously-scored mainnet wallets.
+#
+# Lines starting with # and blank lines are ignored. The UI splits
+# on whitespace and commas, so any of these formats work.
+
+# --- mainnet (already scored locally; warm-cache, fast) ---
+
+GAVA7FY3KBXJVZDBX254LPM53YXRUEVLM5BXMXZOC7ZIW3HXFP6LT4SR
+GB63YPQHUJ57EKZT2MLOI5KPBL5RFWJKEUUJYH43TRYEZDGCSSSIXJTC
+GBACI4PCHZQXZFAADCMG4TICARUDZAGF5CI3A4RPTD7SOSW2VPKLGDCX
+GCKMNZ4G3DP6BDVWQD23JMGE7LCHBS4EDVGTIYTH7GPUKV6UBELI3JNI
+
+# --- testnet (use only when the upload network toggle is set to testnet) ---
+
+# GBPIMUEJFYS7RT23QO2ACH2JMKGXLXZI4E5ACBSQMF32RKZ5H3SVNL5F
+
+# --- add more here ---
+# To pad the dashboard with more variety, copy any active Stellar mainnet
+# address from stellar.expert (https://stellar.expert/explorer/public)
+# that has visible payment history. The /protocol/health view becomes
+# more interesting with 15-30 wallets across multiple risk levels.

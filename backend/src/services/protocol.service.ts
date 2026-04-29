@@ -1,5 +1,15 @@
 import type { NetworkType } from '../config/stellar.config.js';
-import { getAllProtocolHistory, type ScoreHistoryEntry } from './history.service.js';
+import {
+  appendProtocolHistory,
+  clearProtocolHistory,
+  getAllProtocolHistory,
+  type ScoreHistoryEntry,
+} from './history.service.js';
+import { calculateWalletScore } from './scoring.service.js';
+import { createHorizonService } from './horizon.service.js';
+import { cacheService } from './cache.service.js';
+import { validateAccountId } from '../utils/validators.js';
+import { logger } from '../utils/logger.js';
 
 export type RiskLevel = 'Low' | 'Medium' | 'High';
 
@@ -399,4 +409,86 @@ export async function getAlerts(
   }
 
   return { network, alerts };
+}
+
+export interface AddWalletsResult {
+  network: NetworkType;
+  requested: number;
+  scored: number;
+  failed: { wallet: string; reason: string }[];
+  durationMs: number;
+}
+
+const ADD_WALLETS_CONCURRENCY = 5;
+const ADD_WALLETS_MAX = 100;
+
+async function scoreOne(
+  wallet: string,
+  network: NetworkType
+): Promise<{ wallet: string; ok: true } | { wallet: string; ok: false; reason: string }> {
+  try {
+    const validated = validateAccountId(wallet);
+    const cached = cacheService.get(validated, network);
+    const result =
+      cached ??
+      (await calculateWalletScore(validated, network, createHorizonService(network)));
+    if (!cached) cacheService.set(validated, network, result);
+
+    await appendProtocolHistory({
+      wallet: validated,
+      network,
+      score: result.score,
+      risk: result.risk,
+      timestamp: Date.now(),
+    });
+    return { wallet: validated, ok: true };
+  } catch (err) {
+    const e = err as Error;
+    logger.warn({ wallet, network, error: e.message }, 'Protocol-side scoring failed');
+    let reason = e.message;
+    if (reason.includes('Invalid Stellar')) reason = 'Invalid address';
+    else if (reason.includes('Horizon API error: 404')) reason = 'Account not found on this network';
+    return { wallet, ok: false, reason };
+  }
+}
+
+export async function addWalletsToProtocol(
+  walletsInput: string[],
+  network: NetworkType
+): Promise<AddWalletsResult> {
+  const started = Date.now();
+  // Dedupe to keep the workload bounded; trim whitespace so paste-from-textarea works.
+  const seen = new Set<string>();
+  const queue: string[] = [];
+  for (const raw of walletsInput) {
+    const w = raw.trim();
+    if (!w || seen.has(w)) continue;
+    seen.add(w);
+    queue.push(w);
+    if (queue.length >= ADD_WALLETS_MAX) break;
+  }
+
+  const failed: { wallet: string; reason: string }[] = [];
+  let scored = 0;
+
+  for (let i = 0; i < queue.length; i += ADD_WALLETS_CONCURRENCY) {
+    const batch = queue.slice(i, i + ADD_WALLETS_CONCURRENCY);
+    const results = await Promise.all(batch.map((w) => scoreOne(w, network)));
+    for (const r of results) {
+      if (r.ok) scored++;
+      else failed.push({ wallet: r.wallet, reason: r.reason });
+    }
+  }
+
+  return {
+    network,
+    requested: queue.length,
+    scored,
+    failed,
+    durationMs: Date.now() - started,
+  };
+}
+
+export async function resetProtocolHistory(network?: NetworkType): Promise<number> {
+  return clearProtocolHistory(network);
 }

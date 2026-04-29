@@ -40,6 +40,8 @@ export async function buildServer() {
         'GET /protocol/segments?network=&minScore=&maxScore=&risk=Low|Medium|High&activity=low|medium|high&consistent=true|false&limit=',
       protocolRiskHeatmap: 'GET /protocol/risk-heatmap?network=',
       protocolAlerts: 'GET /protocol/alerts?network=&lookbackHours=',
+      protocolWalletsAdd: 'POST /protocol/wallets  body: { wallets: string[], network?: "mainnet" | "testnet" }',
+      protocolWalletsReset: 'DELETE /protocol/wallets?network=',
     },
     docs: 'See README.md and docs/ in the repo for full usage.',
   }));

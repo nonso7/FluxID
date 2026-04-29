@@ -3,11 +3,13 @@ import { appConfig } from '../config/app.config.js';
 import { validateNetwork } from '../utils/validators.js';
 import { logger } from '../utils/logger.js';
 import {
+  addWalletsToProtocol,
   getAlerts,
   getCohorts,
   getHealthMetrics,
   getRiskHeatmap,
   getSegments,
+  resetProtocolHistory,
   type SegmentActivity,
   type SegmentQuery,
 } from '../services/protocol.service.js';
@@ -124,6 +126,44 @@ export async function registerProtocolRoutes(fastify: FastifyInstance) {
       } catch (error) {
         const err = error as Error;
         logger.error({ error: err }, 'Protocol segments route failed');
+        return reply.code(400).send({ success: false, error: err.message });
+      }
+    }
+  );
+
+  fastify.post<{ Body: { wallets?: string[]; network?: string } }>(
+    '/protocol/wallets',
+    async (request, reply) => {
+      try {
+        const body = request.body || {};
+        if (!Array.isArray(body.wallets)) {
+          return reply
+            .code(400)
+            .send({ success: false, error: 'Body must include a `wallets` string array.' });
+        }
+        const network = validateNetwork(body.network ?? DEFAULT_NETWORK);
+        const data = await addWalletsToProtocol(body.wallets, network);
+        return reply.send({ success: true, data });
+      } catch (error) {
+        const err = error as Error;
+        logger.error({ error: err }, 'Protocol wallets upload failed');
+        return reply.code(400).send({ success: false, error: err.message });
+      }
+    }
+  );
+
+  fastify.delete<{ Querystring: ProtocolQuery }>(
+    '/protocol/wallets',
+    async (request, reply) => {
+      try {
+        const network = request.query.network
+          ? validateNetwork(request.query.network)
+          : undefined;
+        const removed = await resetProtocolHistory(network);
+        return reply.send({ success: true, data: { removed, network: network ?? 'all' } });
+      } catch (error) {
+        const err = error as Error;
+        logger.error({ error: err }, 'Protocol wallets reset failed');
         return reply.code(400).send({ success: false, error: err.message });
       }
     }

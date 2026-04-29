@@ -5,7 +5,11 @@ import { AlertCircle, X, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { fetchProtocolAlerts, type ProtocolAlert } from "../../lib/protocolApi";
 
-export default function EarlyWarningBanner() {
+interface EarlyWarningBannerProps {
+  refreshKey?: number;
+}
+
+export default function EarlyWarningBanner({ refreshKey = 0 }: EarlyWarningBannerProps) {
   const [alerts, setAlerts] = useState<ProtocolAlert[]>([]);
 
   useEffect(() => {
@@ -16,7 +20,7 @@ export default function EarlyWarningBanner() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [refreshKey]);
 
   const removeAlert = (id: string) => {
     setAlerts((prev) => prev.filter((a) => a.id !== id));
