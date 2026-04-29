@@ -560,9 +560,14 @@ export default function ProtocolDashboard() {
           <code style={{ background: "var(--card)", padding: "8px 16px", borderRadius: 8, fontSize: 13, border: "1px solid var(--border)" }}>
             GET /protocol/health
           </code>
-          <button className="text-[var(--primary)] text-sm font-bold flex items-center gap-1 hover:underline">
+          <a 
+            href="https://github.com/StellarVhibes/FluxID/blob/main/docs/api-docs/README.md"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[var(--primary)] text-sm font-bold flex items-center gap-1 hover:underline"
+          >
             View API Docs →
-          </button>
+          </a>
         </div>
       </div>
     </div>
